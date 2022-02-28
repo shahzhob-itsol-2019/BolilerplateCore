@@ -5,11 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Handlers\" />
     <Folder Include="Helpers\" />
     <Folder Include="Middleware\" />
     <Folder Include="Models\" />
+    <Folder Include="Mapping\" />
+    <Folder Include="Extensions\" />
     <Folder Include="Utility\" />
     <Folder Include="Providers\" />
   </ItemGroup>
