@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BolilerplateCore.Web
+namespace BoilerplateCore.Web
 {
     public class Startup
     {

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32002.261
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolilerplateCore.CoreApi", "BolilerplateCore\BolilerplateCore.CoreApi.csproj", "{84245CDF-BAC4-4B12-A28A-6F0D89B252B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.CoreApi", "BolilerplateCore\BoilerplateCore.CoreApi.csproj", "{84245CDF-BAC4-4B12-A28A-6F0D89B252B4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AF75D4A9-3FBD-4306-AC1C-6827EB2E9BBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolilerplateCore.Common", "BolilerplateCore.Common\BolilerplateCore.Common.csproj", "{00C8EAD9-EA2E-4962-A03F-FA75C6E309B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.Common", "BolilerplateCore.Common\BoilerplateCore.Common.csproj", "{00C8EAD9-EA2E-4962-A03F-FA75C6E309B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolilerplateCore.Data", "BolilerplateCore.Data\BolilerplateCore.Data.csproj", "{0C4C596A-27D3-4A4F-BC91-C86CBE944861}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.Data", "BolilerplateCore.Data\BoilerplateCore.Data.csproj", "{0C4C596A-27D3-4A4F-BC91-C86CBE944861}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{C7A3A38A-6E30-4800-9CE2-00715DC92A61}"
 EndProject
@@ -21,15 +21,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5792485B-66F0-4AE2-859D-7AE1355CD778}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolilerplateCore.Services", "BolilerplateCore.Services\BolilerplateCore.Services.csproj", "{38010D44-13AF-4533-9296-29B2D9EE0D60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.Services", "BolilerplateCore.Services\BoilerplateCore.Services.csproj", "{38010D44-13AF-4533-9296-29B2D9EE0D60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolilerplateCore.Core", "BolilerplateCore.Core\BolilerplateCore.Core.csproj", "{152D84B8-4728-4BE8-A799-E22DA883D325}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.Core", "BolilerplateCore.Core\BoilerplateCore.Core.csproj", "{152D84B8-4728-4BE8-A799-E22DA883D325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolilerplateCore.Framework", "BolilerplateCore.Framework\BolilerplateCore.Framework.csproj", "{A98ED5E2-C6CF-4AAF-A23A-8D5FBC2FD19E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.Framework", "BolilerplateCore.Framework\BoilerplateCore.Framework.csproj", "{A98ED5E2-C6CF-4AAF-A23A-8D5FBC2FD19E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolilerplateCore.Web", "BolilerplateCore.Web\BolilerplateCore.Web.csproj", "{AF4A70DB-BEFB-4E63-B6A2-2A2FB530BCBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.Web", "BolilerplateCore.Web\BoilerplateCore.Web.csproj", "{AF4A70DB-BEFB-4E63-B6A2-2A2FB530BCBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolilerplateCore.PublicApi", "BolilerplateCore.PublicApi\BolilerplateCore.PublicApi.csproj", "{AAC8C612-279E-44C3-855E-B124C73ADB75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.PublicApi", "BolilerplateCore.PublicApi\BoilerplateCore.PublicApi.csproj", "{AAC8C612-279E-44C3-855E-B124C73ADB75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

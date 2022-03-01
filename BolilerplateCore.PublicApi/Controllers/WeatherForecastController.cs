@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BolilerplateCore.PublicApi.Controllers
+namespace BoilerplateCore.PublicApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BolilerplateCore.Common
+namespace BoilerplateCore.Common
 {
     public class Class1
     {

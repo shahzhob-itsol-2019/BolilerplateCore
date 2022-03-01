@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BoilerplateCore.CoreApi.Controllers
 {
-    [Route("api/Account")]
+    [Route("api/Admin")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AdminController : ControllerBase
     {
     }
 }

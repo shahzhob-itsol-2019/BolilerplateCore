@@ -1,4 +1,4 @@
-﻿using BolilerplateCore.Web.Models;
+﻿using BoilerplateCore.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BolilerplateCore.Web.Controllers
+namespace BoilerplateCore.Web.Controllers
 {
     public class HomeController : Controller
     {

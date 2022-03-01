@@ -13,9 +13,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.PublicApi\\BolilerplateCore.PublicApi.csproj",
-      "projectName": "BolilerplateCore.PublicApi",
-      "projectPath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.PublicApi\\BolilerplateCore.PublicApi.csproj",
+      "projectUniqueName": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.PublicApi\\BoilerplateCore.PublicApi.csproj",
+      "projectName": "BoilerplateCore.PublicApi",
+      "projectPath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.PublicApi\\BoilerplateCore.PublicApi.csproj",
       "packagesPath": "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.PublicApi\\obj\\",
       "projectStyle": "PackageReference",

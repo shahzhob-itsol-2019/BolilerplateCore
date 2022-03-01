@@ -1,6 +1,6 @@
 using System;
 
-namespace BolilerplateCore.PublicApi
+namespace BoilerplateCore.PublicApi
 {
     public class WeatherForecast
     {

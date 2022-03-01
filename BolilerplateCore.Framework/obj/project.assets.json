@@ -13,9 +13,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Framework\\BolilerplateCore.Framework.csproj",
-      "projectName": "BolilerplateCore.Framework",
-      "projectPath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Framework\\BolilerplateCore.Framework.csproj",
+      "projectUniqueName": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Framework\\BoilerplateCore.Framework.csproj",
+      "projectName": "BoilerplateCore.Framework",
+      "projectPath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Framework\\BoilerplateCore.Framework.csproj",
       "packagesPath": "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Framework\\obj\\",
       "projectStyle": "PackageReference",

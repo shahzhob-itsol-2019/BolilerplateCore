@@ -1,6 +1,6 @@
 using System;
 
-namespace BolilerplateCore.Web.Models
+namespace BoilerplateCore.Web.Models
 {
     public class ErrorViewModel
     {
