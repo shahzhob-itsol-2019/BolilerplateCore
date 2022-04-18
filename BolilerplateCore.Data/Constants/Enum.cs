@@ -6,6 +6,31 @@ namespace BoilerplateCore.Data.Constants
 {
     public class Enums
     {
+        public enum UserRoles
+        {
+            Guest
+        }
+
+        public enum LoginStatus
+        {
+            Locked = 0,
+            AccountLocked,
+            InvalidCredential,
+            Succeded,
+            TimeoutLocked,
+            Failed,
+            RequiresTwoFactor
+        }
+
+        public enum CustomClaimTypes
+        {
+            User,
+            FirstName,
+            LastName,
+            ValidationCallTime,
+            SecurityStamp
+        }
+
         public enum Module
         {
             Clientes,
@@ -33,7 +58,11 @@ namespace BoilerplateCore.Data.Constants
         {
             Actualizar_Celular
         }
-
+        public enum StatusType
+        {
+            ApplicionStatus = 1,
+            OperationStatus = 2
+        }
         public enum Gender
         {
             Male,

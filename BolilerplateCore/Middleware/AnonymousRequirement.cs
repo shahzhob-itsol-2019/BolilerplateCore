@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace WinnerWinner.Mobile.API.Middleware
+namespace BoilerplateCore.Mobile.API.Middleware
 {
     using System;
     using System.Security.Claims;
@@ -13,7 +13,7 @@ namespace WinnerWinner.Mobile.API.Middleware
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    //using BoilerplateCore.Common.Authentication;
+    using BoilerplateCore.Common.Authentication;
 
     public class AnonymousRequirement : AuthorizationHandler<AnonymousRequirement>, IAuthorizationRequirement
     {

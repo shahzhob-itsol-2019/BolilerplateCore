@@ -38,6 +38,7 @@ namespace BoilerplateCore.Data
         }
 
         public virtual DbSet<ApplicationUser> User { get; set; }
+        DbSet<Status> Statuses { get; set; }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
@@ -58,6 +59,7 @@ namespace BoilerplateCore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             // NOTE: This piece of code is used for changing the table creation scripts. If we want to make all of PG
             // tables/columns in lower case - this can be uncommented and migration deleted.
             // PostgreSQL is case sensitive and it's inconvenient to query if it's not done directly through EF
@@ -88,7 +90,7 @@ namespace BoilerplateCore.Data
             //        .HasForeignKey<Machine>(m => m.MachineLocationId)
             //    .OnDelete(DeleteBehavior.SetNull);
 
-           
+
         }
 
         protected virtual void OnBeforeSaving()

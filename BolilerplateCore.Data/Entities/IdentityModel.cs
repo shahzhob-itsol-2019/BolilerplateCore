@@ -64,5 +64,6 @@ namespace BoilerplateCore.Data.Entities
 
         [MaxLength(60)]
         public string VerifiedSecondLastName { get; set; }
+        public string NicNumber { get; set; }
     }
 }
