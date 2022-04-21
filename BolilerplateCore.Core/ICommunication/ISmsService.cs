@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoilerplateCore.Services.ICommunication
+namespace BoilerplateCore.Core.ICommunication
 {
     public interface ISmsService
     {

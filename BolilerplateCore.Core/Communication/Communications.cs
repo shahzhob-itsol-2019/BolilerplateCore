@@ -1,12 +1,12 @@
 ﻿using BoilerplateCore.Common.Options;
-using BoilerplateCore.Services.ICommunication;
+using BoilerplateCore.Core.ICommunication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BoilerplateCore.Services.Communication
+namespace BoilerplateCore.Core.Communication
 {
     public static class Communications
     {

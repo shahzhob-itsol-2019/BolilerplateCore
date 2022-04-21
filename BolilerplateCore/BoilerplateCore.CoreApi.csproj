@@ -29,7 +29,7 @@
     <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.14">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -39,6 +39,7 @@
     <ProjectReference Include="..\BolilerplateCore.Common\BoilerplateCore.Common.csproj" />
     <ProjectReference Include="..\BolilerplateCore.Core\BoilerplateCore.Core.csproj" />
     <ProjectReference Include="..\BolilerplateCore.Data\BoilerplateCore.Data.csproj" />
+    <ProjectReference Include="..\BolilerplateCore.Services\BoilerplateCore.Services.csproj" />
   </ItemGroup>
 
 </Project>

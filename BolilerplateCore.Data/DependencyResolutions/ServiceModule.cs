@@ -11,17 +11,7 @@ namespace BoilerplateCore.Data.DependencyResolutions
     {
         public static void Configure(IServiceCollection services)
         {
-            //services.AddScoped<ISecurityService, SecurityAspnetIdentity>();
-            //services.AddTransient<ICommunicationService, CommunicationService>();
-            //services.AddTransient<IEmailService, EmailServiceGoogle>();
-            //services.AddTransient<ISmsService, SmsServiceTest>();
-
-            //services.AddTransient<IStatusService, StatusService>();
-            //services.AddTransient<ICountryService, CountryService>();
-            //services.AddTransient<ICompanyService, CompanyService>();
-            //services.AddTransient<ILocationService, LocationService>();
-            //services.AddTransient<IMineralService, MineralService>();
-            //services.AddTransient<IApplicationService, ApplicationService>();
+            
         }
     }
 }

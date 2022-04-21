@@ -20,6 +20,12 @@ using System.Text;
 using BoilerplateCore.Common.Authentication;
 using BoilerplateCore.Mobile.API.Middleware;
 using BoilerplateCore.Data.DependencyResolutions;
+using BoilerplateCore.CoreApi.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using BoilerplateCore.CoreApi.Helpers;
+using BoilerplateCore.Services.IService;
+using BoilerplateCore.Services;
 //using BoilerplateCore.Common.Authentication;
 
 namespace BoilerplateCore.CoreApi
@@ -42,176 +48,91 @@ namespace BoilerplateCore.CoreApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.RegisterServices(Configuration);
-            // use sql server db in production and sqlite db in development
-            //if (_env.IsProduction())
-            //    services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
-            //    Configuration.GetConnectionString("DefaultConnection"), sqlServerOptions => sqlServerOptions.MigrationsAssembly("BoilerplateCore.Data")));
-            //else
-            //    services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
-            //    Configuration.GetConnectionString("DefaultConnection"), sqlServerOptions => sqlServerOptions.MigrationsAssembly("BoilerplateCore.Data")));
-            
-            // AddCors must be before AddMvc
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy(
-            //        "CorsPolicy",
-            //        builder =>
-            //        {
-            //            builder.AllowAnyOrigin()
-            //                .AllowAnyMethod()
-            //                .AllowAnyHeader()
-            //                .WithExposedHeaders("x-pagination");
-            //        });
-            //});
-            //services.AddControllers();
-            //services.AddAuthentication(x =>
-            //{
-            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //}).AddJwtBearer(x =>
-            //{
-            //    x.Events = new JwtBearerEvents
-            //    {
-            //        OnTokenValidated = context =>
-            //        {
-            //            //var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-            //            //var userId = int.Parse(context.Principal.Identity.Name);
-            //            //var user = userService.GetById(userId);
-            //            //if (user == null)
-            //            //{
-            //            //    // return unauthorized if user no longer exists
-            //            //    context.Fail("Unauthorized");
-            //            //}
-            //            return Task.CompletedTask;
-            //        }
-            //    };
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
-            //    x.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        //IssuerSigningKey = new SymmetricSecurityKey(key),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false
-            //    };
-            //});
+            //services.AddScoped<IUserService, UserService>();
+            //services.AddScoped<ICompanyService, CompanyService>();
+            //services.AddScoped<IAddressService, AddressService>();
+            //services.AddScoped<ICityService, CityService>();
+            //services.AddScoped<ICountryService, CountryService>();
 
-            //services.AddMvc(option => option.EnableEndpointRouting = false)
-            //    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            //services.AddScoped<IStatusService, StatusService>();
+            //services.AddScoped<IStatusTypeService, StatusTypeService>();
+
+            //services.AddScoped<INotificationService, NotificationService>();
+            //services.AddScoped<INotificationTemplateService, NotificationTemplateService>();
+            //services.AddScoped<INotificationTypeService, NotificationTypeService>();
+            services.AddHttpContextAccessor();
+            
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //var httpContextAccessor = services.BuildServiceProvider().GetService<IHttpContextAccessor>();
+            
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            {
+                options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.LoginPath = new PathString("/Account/Login");
+                options.AccessDeniedPath = new PathString("/Account/Login/");
+                options.Events = new CookieAuthenticationEvents()
+                {
+                    OnValidatePrincipal = ctx =>
+                    {
+                        var ret = Task.Run(async () =>
+                        {
+                            var accessToken = ctx.Principal.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                            var userName = ctx.Principal.FindFirst(ClaimTypes.Name)?.Value;
+                            var result = (await HttpClientHelper.GetAsync<UserClaim>("Account/GetUser?userName=" + userName));
+                            if (result == null || result.Data == null)
+                            {
+                                ctx.RejectPrincipal();
+                            }
+                        });
+                        return ret;
+                    },
+                    OnSigningIn = async (context) =>
+                    {
+                        ClaimsIdentity identity = (ClaimsIdentity)context.Principal.Identity;
+                        identity.AddClaim(new Claim(ClaimTypes.PrimarySid, ""));
+                        identity.AddClaim(new Claim(ClaimTypes.Sid, ""));
+                        identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, ""));
+                        identity.AddClaim(new Claim(ClaimTypes.Name, ""));
+                        identity.AddClaim(new Claim(ClaimTypes.Email, ""));
+                        identity.AddClaim(new Claim(ClaimTypes.GivenName, ""));
+                        identity.AddClaim(new Claim(ClaimTypes.Surname, ""));
+                        identity.AddClaim(new Claim(ClaimTypes.Role, ""));
+                    }
+                };
+            })
+            .AddCookie(IdentityConstants.ExternalScheme, options =>
+            {
+                options.Cookie.Name = IdentityConstants.ExternalScheme;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+                options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login/");
+            })
+            .AddMicrosoftAccount(microsoftOptions =>
+            {
+                microsoftOptions.ClientId = "68669dee-ad51-4ab0-8a8f-16f456a05917";
+                microsoftOptions.ClientSecret = "xwaxyXEPRO726#@}icBG05@";
+            })
+            .AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = "434467402013-4ehq09dvqp7qu57jucr1rra56fs0glcv.apps.googleusercontent.com";
+                googleOptions.ClientSecret = "k4kvo8ckstA6u1Da5Skkiqaj";
+            });
+
+            //Local dependencies
+            services.AddScoped<CurrentUser>();
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson(opt =>
                 {
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
-
-            //services.AddHealthChecks();
-            //string domain = $"https://{Configuration["Auth0:Domain"]}/";
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            //}).AddJwtBearer(options =>
-            //{
-            //    options.SaveToken = true;
-            //    options.RequireHttpsMetadata = false;
-            //    options.Authority = domain;
-
-            //    // options.Audience = Configuration["Auth0:ApiIdentifier"];
-            //    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-            //    {
-            //        ValidateIssuer = true,
-            //        ValidateAudience = true,
-            //        ValidAudience = Configuration["JWT:ValidAudience"],
-            //        ValidIssuer = Configuration["JWT:ValidIssuer"],
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"])),
-            //        ValidateIssuerSigningKey = true,
-            //        ValidAudiences = new List<string>
-            //        {
-            //            Configuration["Auth0:ApiIdentifier"],
-            //            Configuration["Auth0:CustomAPIIdentifier"],
-            //        },
-            //        ValidateLifetime = true,
-            //        ClockSkew = TimeSpan.Zero,
-            //    };
-
-            //    options.Events = new JwtBearerEvents
-            //    {
-            //        OnMessageReceived = context =>
-            //        {
-            //            return Task.CompletedTask;
-            //        },
-            //        OnTokenValidated = context =>
-            //        {
-            //            // Grab the raw value of the token, and store it as a claim so we can retrieve it again later in the request pipeline
-            //            if (context.SecurityToken is JwtSecurityToken token)
-            //            {
-            //                if (context.Principal.Identity is ClaimsIdentity identity)
-            //                {
-            //                    identity.AddClaim(new Claim("access_token", token.RawData));
-            //                    identity.AddClaim(new Claim("auth0_id", token.Subject ?? string.Empty));
-
-            //                    // Extract roles from the token and add them (they're claims for further authorization)
-            //                    //foreach (var role in AuthenticationHelper.GetRoles(token))
-            //                    //{
-            //                    //    identity.AddClaim(new Claim(ClaimTypes.Role, role));
-            //                    //}
-            //                }
-            //            }
-
-            //            return Task.FromResult(0);
-            //        },
-            //    };
-            //}).AddCookie("MyCookieAuth", options => {
-            //    options.Cookie.Name = "MyCookieAuth";
-            //});
-            //var sp = services.BuildServiceProvider();
-            //var httpContextAccessor = sp.GetService<IHttpContextAccessor>();
-            //var logger = sp.GetService<ILogger<AnonymousRequirement>>();
-            // Add authorization policies
-            services.AddAuthorization(auth =>
-            {
-                auth.AddPolicy(Policies.AllowAnonymousUsers, policy =>
-                {
-                    //policy.AddRequirements(new AnonymousRequirement(Configuration, httpContextAccessor, logger));
-                });
-
-                //auth.AddPolicy(Policies.AdminOnly, policy =>
-                //{
-                //    policy.RequireRole(Roles.Admin);
-                //});
-
-                //auth.AddPolicy(Policies.MachineAdmin, policy =>
-                //{
-                //    policy.RequireRole(Roles.MachineAdmin);
-                //});
-
-                //auth.AddPolicy(Policies.AnyAdmin, policy =>
-                //{
-                //    policy.RequireRole(Roles.Admin, Roles.MachineAdmin);
-                //});
-
-                //auth.AddPolicy(Policies.MachineServer, policy =>
-                //{
-                //    policy.AddRequirements(new MachineServerRequirement(Configuration, httpContextAccessor));
-                //});
-
-                //auth.AddPolicy(Policies.Webhook, policy =>
-                //{
-                //    policy.AddRequirements(new QueryParameterRequirement(Configuration, httpContextAccessor));
-                //});
-
-                //auth.AddPolicy(Policies.Payment, policy =>
-                //{
-                //    policy.AddRequirements(new PaymentRequirement(Configuration, httpContextAccessor));
-                //});
-
-                //auth.AddPolicy(Policies.PhysicalPlay, policy =>
-                //{
-                //    policy.AddRequirements(new PhysicalPlayRequirement(Configuration, httpContextAccessor));
-                //});
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

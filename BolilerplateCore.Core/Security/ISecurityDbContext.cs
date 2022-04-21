@@ -12,7 +12,7 @@ namespace BoilerplateCore.Core.Security
     {
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 
-        DbSet<Data.Entities.ApplicationUser> AppUsers { get; set; }
+        DbSet<Entities.ApplicationUser> AppUsers { get; set; }
         DbSet<TwoFactorType> TwoFactorTypes { get; set; }
         DbSet<PreviousPassword> PreviousPasswords { get; set; }
     }

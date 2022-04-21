@@ -46,18 +46,6 @@
           "lib/netstandard2.0/Abp.Web.Common.dll": {}
         }
       },
-      "AutoMapper/11.0.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.CSharp": "4.7.0"
-        },
-        "compile": {
-          "lib/netstandard2.1/AutoMapper.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.1/AutoMapper.dll": {}
-        }
-      },
       "Castle.Core/4.4.0": {
         "type": "package",
         "dependencies": {
@@ -792,7 +780,7 @@
           "lib/netstandard2.0/Microsoft.CodeAnalysis.Razor.dll": {}
         }
       },
-      "Microsoft.CSharp/4.7.0": {
+      "Microsoft.CSharp/4.5.0": {
         "type": "package",
         "compile": {
           "ref/netcoreapp2.0/_._": {}
@@ -3109,21 +3097,6 @@
         "lib/netstandard2.0/Abp.Web.Common.xml"
       ]
     },
-    "AutoMapper/11.0.0": {
-      "sha512": "+596AnKykYCk9RxXCEF4GYuapSebQtFVvIA1oVG1rrRkCLAC7AkWehJ0brCfYUbdDW3v1H/p0W3hob7JoXGjMw==",
-      "type": "package",
-      "path": "automapper/11.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "README.md",
-        "automapper.11.0.0.nupkg.sha512",
-        "automapper.nuspec",
-        "icon.png",
-        "lib/netstandard2.1/AutoMapper.dll",
-        "lib/netstandard2.1/AutoMapper.xml"
-      ]
-    },
     "Castle.Core/4.4.0": {
       "sha512": "b5rRL5zeaau1y/5hIbI+6mGw3cwun16YjkHZnV9RRT5UyUIFsgLmNXJ0YnIN9p8Hw7K7AbG1q1UclQVU3DinAQ==",
       "type": "package",
@@ -3861,10 +3834,10 @@
         "microsoft.codeanalysis.razor.nuspec"
       ]
     },
-    "Microsoft.CSharp/4.7.0": {
-      "sha512": "pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
+    "Microsoft.CSharp/4.5.0": {
+      "sha512": "kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ==",
       "type": "package",
-      "path": "microsoft.csharp/4.7.0",
+      "path": "microsoft.csharp/4.5.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3877,7 +3850,6 @@
         "lib/netcoreapp2.0/_._",
         "lib/netstandard1.3/Microsoft.CSharp.dll",
         "lib/netstandard2.0/Microsoft.CSharp.dll",
-        "lib/netstandard2.0/Microsoft.CSharp.xml",
         "lib/portable-net45+win8+wp8+wpa81/_._",
         "lib/uap10.0.16299/_._",
         "lib/win8/_._",
@@ -3887,7 +3859,7 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "microsoft.csharp.4.7.0.nupkg.sha512",
+        "microsoft.csharp.4.5.0.nupkg.sha512",
         "microsoft.csharp.nuspec",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
@@ -9513,7 +9485,6 @@
     ".NETCoreApp,Version=v3.1": [
       "Abp >= 5.2.0",
       "Abp.Web.Common >= 5.2.0",
-      "AutoMapper >= 11.0.0",
       "JWT >= 6.1.0",
       "Microsoft.AspNetCore.Mvc >= 2.2.0",
       "Microsoft.Extensions.Configuration >= 3.1.20",
@@ -9570,10 +9541,6 @@
           "Abp.Web.Common": {
             "target": "Package",
             "version": "[5.2.0, )"
-          },
-          "AutoMapper": {
-            "target": "Package",
-            "version": "[11.0.0, )"
           },
           "JWT": {
             "target": "Package",

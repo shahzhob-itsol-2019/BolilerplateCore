@@ -19,7 +19,19 @@ namespace BoilerplateCore.Data.Database
 
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
 
+        DbSet<ApplicationUser> User { get; set; }
+        // DbSet<Permission> Permissions { get; set; }
+        DbSet<Addresses> Addresses { get; set; }
+        DbSet<Country> Countries { get; set; }
+        DbSet<City> Cities { get; set; }
+        DbSet<Company> Companies { get; set; }
+
         DbSet<Status> Statuses { get; set; }
+        DbSet<StatusType> StatusTypes { get; set; }
+
+        DbSet<Notification> Notifications { get; set; }
+        DbSet<NotificationTemplate> NotificationTemplates { get; set; }
+        DbSet<NotificationType> NotificationTypes { get; set; }
     }
 }
 

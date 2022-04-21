@@ -5,27 +5,35 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.22" />
     <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.14">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.14">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BolilerplateCore.Common\BoilerplateCore.Common.csproj" />
+    <ProjectReference Include="..\BolilerplateCore.Core\BoilerplateCore.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

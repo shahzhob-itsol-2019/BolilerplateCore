@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using BoilerplateCore.Data.Database;
 using BoilerplateCore.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using BoilerplateCore.Common.Options;
+using BoilerplateCore.Data.IRepository;
+using BoilerplateCore.Data.Repository;
 
 namespace BoilerplateCore.Data.DependencyResolutions
 {
@@ -15,55 +18,61 @@ namespace BoilerplateCore.Data.DependencyResolutions
     {
         public static void Configure(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<SqlServerDbContext>(options => options.UseSqlServer(
-            configuration.GetConnectionString("DefaultConnection"),
-            msSqlServerOptions => msSqlServerOptions.MigrationsAssembly("BoilerplateCore.Data")));
-            
-            // AddCors must be before AddMvc
-            services.AddCors(options =>
+            services.AddDbContext<SqlServerDbContext>(
+                options => options.UseSqlServer(
+                    configuration.GetConnectionString("DefaultConnection"),
+                        msSqlServerOptions => msSqlServerOptions.MigrationsAssembly("BoilerplateCore.Data")));
+            var componentOptions = services.BuildServiceProvider().GetService<Microsoft.Extensions.Options.IOptionsSnapshot<ComponentOptions>>();
+            if (componentOptions.Value.Security.SecurityService == "AspnetIdentity")
             {
-                options.AddPolicy(
-                    "CorsPolicy",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .WithExposedHeaders("x-pagination");
-                    });
-            });
-            services.AddControllers();
-            //services.AddMvc(option => option.EnableEndpointRouting = false)
-            //    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-            //    .AddNewtonsoftJson(opt =>
-            //    {
-            //        opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            //    });
-            services.AddHealthChecks();
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            {
-                options.User.RequireUniqueEmail = false;
-                
-                // for email confirmation
-                //options.SignIn.RequireConfirmedEmail = true;
-            })
-            .AddEntityFrameworkStores<SqlServerDbContext>()
-            .AddDefaultTokenProviders();
+                services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                {
+                    options.User.RequireUniqueEmail = false;
+                })
+                .AddEntityFrameworkStores<SqlServerDbContext>()
+                .AddDefaultTokenProviders();
 
-            services.BuildServiceProvider().GetService<UserManager<ApplicationUser>>();
+                // AddCors must be before AddMvc
+                services.AddCors(options =>
+                {
+                    options.AddPolicy(
+                        "CorsPolicy",
+                        builder =>
+                        {
+                            builder.AllowAnyOrigin()
+                                .AllowAnyMethod()
+                                .AllowAnyHeader()
+                                .WithExposedHeaders("x-pagination");
+                        });
+                });
+                services.AddControllers();
+                services.AddHealthChecks();
+
+                services.BuildServiceProvider().GetService<UserManager<ApplicationUser>>();
+                services.AddTransient<IDbContext, SqlServerDbContext>();
+            }
+
             services.AddScoped<IDbContext, SqlServerDbContext>();
+            services.AddScoped<IUnitOfWork>(unitOfWork => new UnitOfWork(unitOfWork.GetService<IDbContext>()));
 
-            //services.AddTransient<IPrizeRepository, PrizeRepository>();
-            //services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICompanyRepository, CompanyRepository>();
+            services.AddTransient<IAddressRepository, AddressRepository>();
+            services.AddTransient<ICityRepository, CityRepository>();
+            services.AddTransient<ICountryRepository, CountryRepository>();
+
+            services.AddTransient<IStatusRepository, StatusRepository>();
+            services.AddTransient<IStatusTypeRepository, StatusTypeRepository>();
+
+            services.AddTransient<INotificationRepository, NotificationRepository>();
+            services.AddTransient<INotificationTemplateRepository, NotificationTemplateRepository>();
+            services.AddTransient<INotificationTypeRepository, NotificationTypeRepository>();
         }
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             DbMigrator.Migrate(app);
-            if (env.IsDevelopment())
-            {
-                DataSeeder.Seed(app);
-            }
+            DataSeeder.Seed(app);
         }
     }
 }

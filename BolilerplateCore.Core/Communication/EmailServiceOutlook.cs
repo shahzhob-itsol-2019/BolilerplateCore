@@ -1,11 +1,11 @@
 ﻿using BoilerplateCore.Common.Options;
-using BoilerplateCore.Services.ICommunication;
+using BoilerplateCore.Core.ICommunication;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace BoilerplateCore.Services.Communication
+namespace BoilerplateCore.Core.Communication
 {
     public class EmailServiceOutlook : IEmailService
     {

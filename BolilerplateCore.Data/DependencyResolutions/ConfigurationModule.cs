@@ -17,7 +17,13 @@ namespace BoilerplateCore.Data.DependencyResolutions
         public static IServiceCollection Configure(IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<BoilerplateOptions>(configuration.GetSection("BoilerplateOptions"));
+            services.Configure<ComponentOptions>(configuration.GetSection("Component"));
+            services.Configure<InfrastructureOptions>(configuration.GetSection("Infrastructure"));
+            services.Configure<SecurityOptions>(configuration.GetSection("Security"));
             services.Configure<GoogleOptions>(configuration.GetSection("Google"));
+            services.Configure<OutlookOptions>(configuration.GetSection("Outlook"));
+            services.Configure<FacebookOptions>(configuration.GetSection("Facebook"));
+            services.Configure<TwitterOptions>(configuration.GetSection("Twitter"));
             AppServicesHelper.Configuration = configuration;
             return services;
         }

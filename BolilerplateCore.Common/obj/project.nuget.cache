@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "rUHN+WiIqpk0d2Q/438zl4ci0mW1Q1RQcG35/hw8h/0YZtpPxNrO8E5CkYxsQ2Xo/LYh5LW21Xzi5xUQYYUUqQ==",
+  "dgSpecHash": "PXqRe+gm6/RRuGSzGmFaXxMvWEIPplFeZ6JJr8HQDNgl3y+X2+mMkVTRKCGRpUizUiMdAmM2J/9jAiBoEKmcAA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Common\\BoilerplateCore.Common.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\abp\\5.2.0\\abp.5.2.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\abp.web.common\\5.2.0\\abp.web.common.5.2.0.nupkg.sha512",
-    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\automapper\\11.0.0\\automapper.11.0.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\castle.core.asyncinterceptor\\2.0.21-alpha\\castle.core.asyncinterceptor.2.0.21-alpha.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\castle.loggingfacility\\5.0.1\\castle.loggingfacility.5.0.1.nupkg.sha512",
@@ -58,7 +57,7 @@
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.codeanalysis.common\\2.8.0\\microsoft.codeanalysis.common.2.8.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.codeanalysis.csharp\\2.8.0\\microsoft.codeanalysis.csharp.2.8.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.codeanalysis.razor\\2.2.0\\microsoft.codeanalysis.razor.2.2.0.nupkg.sha512",
-    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.dotnet.platformabstractions\\2.1.0\\microsoft.dotnet.platformabstractions.2.1.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\3.1.1\\microsoft.extensions.caching.abstractions.3.1.1.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.caching.memory\\3.1.1\\microsoft.extensions.caching.memory.3.1.1.nupkg.sha512",

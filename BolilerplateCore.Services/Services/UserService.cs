@@ -5,7 +5,7 @@ using BoilerplateCore.Common.Options;
 using BoilerplateCore.Core.ISecurity;
 using BoilerplateCore.Data.Entities;
 using BoilerplateCore.Data.IRepository;
-using BoilerplateCore.Services.ICommunication;
+using BoilerplateCore.Core.ICommunication;
 using BoilerplateCore.Services.IService;
 using Microsoft.Extensions.Options;
 using System;

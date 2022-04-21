@@ -20,10 +20,10 @@ namespace BoilerplateCore.Core.Security
             switch (componentOptions.Value.Security.SecurityService)
             {
                 case "AspnetIdentity":
-                    services.AddTransient<ISecurityService, SecurityAspnetIdentity>();
+                    //services.AddTransient<ISecurityService, SecurityAspnetIdentity>();
                     break;
                 case "SingleSignOn":
-                    services.AddTransient<ISecurityService, SecuritySingleSignOn>();
+                    //services.AddTransient<ISecurityService, SecuritySingleSignOn>();
                     break;
                 default:
                     break;

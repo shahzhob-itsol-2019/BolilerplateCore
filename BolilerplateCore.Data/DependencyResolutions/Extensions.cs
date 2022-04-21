@@ -15,20 +15,20 @@ namespace BoilerplateCore.Data.DependencyResolutions
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
+            InfrastructureModule.Configure(services, configuration);
             ServiceModule.Configure(services);
             RepositoryModule.Configure(services, configuration);
-            ConfigurationModule.Configure(services, configuration);
-            InfrastructureModule.Configure(services, configuration);
             ComponentModule.Configure(services);
+            
         }
 
 
         public static void RegisterApps(this IApplicationBuilder apps, IWebHostEnvironment env)
         {
-            ConfigurationModule.Configure(apps, env);
             InfrastructureModule.Configure(apps, env);
-            ComponentModule.Configure(apps);
             RepositoryModule.Configure(apps, env);
+            ConfigurationModule.Configure(apps, env);
+            ComponentModule.Configure(apps);
         }
     }
 }

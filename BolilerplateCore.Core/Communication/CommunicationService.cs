@@ -1,11 +1,11 @@
-﻿using BoilerplateCore.Services.ICommunication;
+﻿using BoilerplateCore.Core.ICommunication;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoilerplateCore.Services.Communication
+namespace BoilerplateCore.Core.Communication
 {
     public class CommunicationService : ICommunicationService
     {
