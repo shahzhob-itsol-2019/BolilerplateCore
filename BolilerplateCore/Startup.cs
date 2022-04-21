@@ -22,7 +22,7 @@ using BoilerplateCore.Mobile.API.Middleware;
 using BoilerplateCore.Data.DependencyResolutions;
 //using BoilerplateCore.Common.Authentication;
 
-namespace BoilerplateCore
+namespace BoilerplateCore.CoreApi
 {
     public class Startup
     {

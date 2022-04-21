@@ -38,6 +38,7 @@ namespace BoilerplateCore.Data.DependencyResolutions
             .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
                 options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 options.LoginPath = new PathString("/Account/Login");
                 options.AccessDeniedPath = new PathString("/Account/Login/");
                 options.Events = new CookieAuthenticationEvents()
@@ -70,12 +71,14 @@ namespace BoilerplateCore.Data.DependencyResolutions
                     }
                 };
             });
-            //.AddCookie(IdentityConstants.ExternalScheme, options =>
+
+            // way to register Cookie
+            //services.ConfigureApplicationCookie(config =>
             //{
-            //    options.Cookie.Name = IdentityConstants.ExternalScheme;
-            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            //    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-            //    options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login/");
+            //    config.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    config.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //    config.LoginPath = new PathString("/Account/Login");
+            //    config.AccessDeniedPath = new PathString("/Account/Login/");
             //});
         }
 

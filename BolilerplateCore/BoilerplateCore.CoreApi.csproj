@@ -5,13 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Handlers\" />
-    <Folder Include="Helpers\" />
-    <Folder Include="Models\" />
-    <Folder Include="Mapping\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Utility\" />
-    <Folder Include="Providers\" />
+    <Compile Remove="Extensions\**" />
+    <Compile Remove="Handlers\**" />
+    <Compile Remove="Mapping\**" />
+    <Compile Remove="Providers\**" />
+    <Content Remove="Extensions\**" />
+    <Content Remove="Handlers\**" />
+    <Content Remove="Mapping\**" />
+    <Content Remove="Providers\**" />
+    <EmbeddedResource Remove="Extensions\**" />
+    <EmbeddedResource Remove="Handlers\**" />
+    <EmbeddedResource Remove="Mapping\**" />
+    <EmbeddedResource Remove="Providers\**" />
+    <None Remove="Extensions\**" />
+    <None Remove="Handlers\**" />
+    <None Remove="Mapping\**" />
+    <None Remove="Providers\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +28,6 @@
     <PackageReference Include="Abp.Web.Common" Version="5.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
       <PrivateAssets>all</PrivateAssets>
@@ -29,6 +37,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BolilerplateCore.Common\BoilerplateCore.Common.csproj" />
+    <ProjectReference Include="..\BolilerplateCore.Core\BoilerplateCore.Core.csproj" />
     <ProjectReference Include="..\BolilerplateCore.Data\BoilerplateCore.Data.csproj" />
   </ItemGroup>
 

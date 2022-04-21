@@ -1,5 +1,5 @@
-﻿using BoilerplateCore.Data.Helpers;
-using BoilerplateCore.Data.Options;
+﻿using BoilerplateCore.Common.Helpers;
+using BoilerplateCore.Common.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

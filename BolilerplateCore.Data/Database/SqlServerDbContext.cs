@@ -117,7 +117,17 @@ namespace BoilerplateCore.Data.Database
             }
         }
         public DbSet<ApplicationUser> User { get; set; }
+        public virtual DbSet<Addresses> Addresses { get; set; }
+        public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<Company> Companies { get; set; }
+
         public virtual DbSet<Status> Statuses { get; set; }
+        public virtual DbSet<StatusType> StatusTypes { get; set; }
+
+        public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<NotificationTemplate> NotificationTemplates { get; set; }
+        public virtual DbSet<NotificationType> NotificationTypes { get; set; }
 
         //public virtual DbSet<Country> Countries { get; set; }
     }

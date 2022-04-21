@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BolilerplateCore.Core\BoilerplateCore.Core.csproj" />
     <ProjectReference Include="..\BolilerplateCore.Data\BoilerplateCore.Data.csproj" />
   </ItemGroup>
 

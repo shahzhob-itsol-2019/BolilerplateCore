@@ -43,6 +43,9 @@ namespace BoilerplateCore.Data.DependencyResolutions
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.User.RequireUniqueEmail = false;
+                
+                // for email confirmation
+                //options.SignIn.RequireConfirmedEmail = true;
             })
             .AddEntityFrameworkStores<SqlServerDbContext>()
             .AddDefaultTokenProviders();

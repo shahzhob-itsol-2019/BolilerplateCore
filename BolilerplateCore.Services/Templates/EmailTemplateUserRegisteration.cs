@@ -9,7 +9,7 @@ namespace BoilerplateCore.Services.Templates
     {
         public const string Subject = "Account Activation";
         public const string MessageBody = "Hi #Name </br></br>"
-                                        + "Thank you for registering in ItSolution. "
+                                        + "Thank you for registering in Boilerplate. "
                                         + "Click <a href=\"#Link\">here</a> to activate your account.";
     }
 }

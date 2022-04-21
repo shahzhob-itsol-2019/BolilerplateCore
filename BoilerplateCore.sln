@@ -5,21 +5,13 @@ VisualStudioVersion = 16.0.32002.261
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.CoreApi", "BolilerplateCore\BoilerplateCore.CoreApi.csproj", "{84245CDF-BAC4-4B12-A28A-6F0D89B252B4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AF75D4A9-3FBD-4306-AC1C-6827EB2E9BBB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.Common", "BolilerplateCore.Common\BoilerplateCore.Common.csproj", "{00C8EAD9-EA2E-4962-A03F-FA75C6E309B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.Data", "BolilerplateCore.Data\BoilerplateCore.Data.csproj", "{0C4C596A-27D3-4A4F-BC91-C86CBE944861}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{C7A3A38A-6E30-4800-9CE2-00715DC92A61}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{7EA58912-C24D-410D-9687-723051D1B505}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundProcesses", "BackgroundProcesses", "{A75C057D-2216-4FF9-ABEB-0FACA5AC3883}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{369444AE-5C0B-44DD-B5E6-FD85F6046796}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5792485B-66F0-4AE2-859D-7AE1355CD778}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoilerplateCore.Services", "BolilerplateCore.Services\BoilerplateCore.Services.csproj", "{38010D44-13AF-4533-9296-29B2D9EE0D60}"
 EndProject
