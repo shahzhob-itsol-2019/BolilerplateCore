@@ -4,8 +4,8 @@
 # User-specific files
 *.suo
 *.user
-bin
-obj
+bin/
+obj/
 packages
 *.userosscache
 *.sln.docstates
