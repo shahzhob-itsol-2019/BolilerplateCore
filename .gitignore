@@ -4,7 +4,10 @@
 # User-specific files
 *.suo
 *.user
-bin/
+BoilerplateCore.Services/bin/
+BoilerplateCore.Data/bin/
+BoilerplateCore.Core/bin/
+BoilerplateCore/bin/
 obj/
 packages
 *.userosscache

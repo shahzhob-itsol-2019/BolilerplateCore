@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "8qd+b/+iwjd66/tB7rGfC/ocDW1nplpbUJ889pBRUf1XReoQ/bcHZe+i56DT/ZYT/MVMN/3ap5JrMOOtt5OLIQ==",
+  "dgSpecHash": "PFV/jdgMUmr3DMwH1cITwqXuOgxGJDG6NNu7Zen+pWfeJ9nI7v3O4JQn6cuoGuRu5Vv3LlTnEVavIKYJee8SlA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Data\\BoilerplateCore.Data.csproj",
   "expectedPackageFiles": [
@@ -21,7 +21,7 @@
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.aspnetcore.authentication.cookies\\2.2.0\\microsoft.aspnetcore.authentication.cookies.2.2.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.2.0\\microsoft.aspnetcore.authentication.core.2.2.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.aspnetcore.authentication.facebook\\2.2.0\\microsoft.aspnetcore.authentication.facebook.2.2.0.nupkg.sha512",
-    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\2.2.0\\microsoft.aspnetcore.authentication.google.2.2.0.nupkg.sha512",
+    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\2.2.2\\microsoft.aspnetcore.authentication.google.2.2.2.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.22\\microsoft.aspnetcore.authentication.jwtbearer.3.1.22.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.aspnetcore.authentication.microsoftaccount\\2.2.0\\microsoft.aspnetcore.authentication.microsoftaccount.2.2.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.aspnetcore.authentication.oauth\\2.2.0\\microsoft.aspnetcore.authentication.oauth.2.2.0.nupkg.sha512",
