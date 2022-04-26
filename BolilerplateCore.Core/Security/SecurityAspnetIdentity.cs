@@ -3,6 +3,7 @@ using BoilerplateCore.Common.Models;
 using BoilerplateCore.Common.Options;
 using BoilerplateCore.Core.Entities;
 using BoilerplateCore.Core.ISecurity;
+using BoilerplateCore.Data.Database;
 using BoilerplateCore.Data.Entities;
 using IdentityModel;
 using IdentityModel.Client;
@@ -21,6 +22,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using System.Web;
 using static BoilerplateCore.Common.Utility.Enums;
+//using static BoilerplateCore.Common.Utility.Enums;
 using AuthenticationResponse = BoilerplateCore.Common.Models.AuthenticationResponse;
 using LoginResponse = BoilerplateCore.Common.Models.LoginResponse;
 using UserClaims = BoilerplateCore.Common.Models.UserClaims;
@@ -34,6 +36,7 @@ namespace BoilerplateCore.Core.Security
         protected readonly UserManager<ApplicationUser> _userManager;
         protected readonly RoleManager<IdentityRole> _roleManager;
         protected readonly SignInManager<ApplicationUser> _signInManager;
+        protected readonly ISqlServerDbContext _dbContext;
         private readonly UrlEncoder _urlEncoder;
 
         private string clientId = string.Empty;
@@ -49,7 +52,9 @@ namespace BoilerplateCore.Core.Security
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
-            UrlEncoder urlEncoder)
+            UrlEncoder urlEncoder,
+            ISqlServerDbContext dbContext
+            )
         {
             this.securityOptions = securityOptions.Value;
             this.boilerplateOptions = boilerplateOptions.Value;
@@ -57,6 +62,7 @@ namespace BoilerplateCore.Core.Security
             _roleManager = roleManager;
             _signInManager = signInManager;
             _urlEncoder = urlEncoder;
+            _dbContext = dbContext;
 
             clientId = this.securityOptions.ClientId;
             clientSecret = this.securityOptions.ClientSecret;
@@ -74,12 +80,9 @@ namespace BoilerplateCore.Core.Security
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 EmailConfirmed = model.CreateActivated,
-                TwoFactorTypeId = TwoFactorTypes.None
+                TwoFactorTypeId = TwoFactorTypes.None,
             };
-            try
-            {
-                var result = await _userManager.CreateAsync(user, model.Password);
-            
+            var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 await AddPreviousPassword(user, model.Password);
@@ -112,12 +115,6 @@ namespace BoilerplateCore.Core.Security
             }
             var errorMessaeg = result.Errors.Aggregate("", (current, error) => current + (error.Description + "\n")).TrimEnd('\n');
             return new BaseModel { Success = false, Message = errorMessaeg };
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
         }
         public async Task<BaseModel> UpdateUserDetail(UserModel userInfo)
         {
@@ -268,10 +265,10 @@ namespace BoilerplateCore.Core.Security
                 new Claim(JwtClaimTypes.Email, user.Email),
             });
 
-            //if (!string.IsNullOrWhiteSpace(user.FirstName))
-            //    claims.Add(new Claim(JwtClaimTypes.GivenName.ToString(), user.FirstName));
-            //if (!string.IsNullOrWhiteSpace(user.LastName))
-            //    claims.Add(new Claim(JwtClaimTypes.FamilyName.ToString(), user.LastName));
+            if (!string.IsNullOrWhiteSpace(user.FirstName))
+                claims.Add(new Claim(JwtClaimTypes.GivenName.ToString(), user.FirstName));
+            if (!string.IsNullOrWhiteSpace(user.LastName))
+                claims.Add(new Claim(JwtClaimTypes.FamilyName.ToString(), user.LastName));
 
             var roles = (await _userManager.GetRolesAsync(user));
 
@@ -290,12 +287,12 @@ namespace BoilerplateCore.Core.Security
             return accessToken;
         }
 
-        public async Task<LoginResponse> Login(string userName, string password, bool persistCookie = false)
+        public async Task<LoginResponse> Login(string Email, string password, bool persistCookie = false)
         {
-            var user = await _userManager.FindByEmailAsync(userName);
+            var user = await _userManager.FindByEmailAsync(Email);
             if (user == null)
             {
-                user = await _userManager.FindByNameAsync(userName);
+                user = await _userManager.FindByNameAsync(Email);
                 if (user == null)
                     return new LoginResponse { Status = LoginStatus.Failed, Message = "Invalid user name or password." };
             }
@@ -308,7 +305,7 @@ namespace BoilerplateCore.Core.Security
             if (!user.EmailConfirmed)
                 return new LoginResponse { Status = LoginStatus.Failed, Message = "Email has not yet been confirmed , please confirm your email and login again." };
 
-            var result = await _signInManager.PasswordSignInAsync(userName, password, persistCookie, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(Email, password, persistCookie, lockoutOnFailure: false);
             if (result.Succeeded)
             {
                 // Todo:
@@ -317,27 +314,24 @@ namespace BoilerplateCore.Core.Security
 
                 var accessToken = await Token(user);
 
-                //var tokenClient = new TokenClient("http://localhost:54866" + "/connect/token", userName, password);
-                //var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(userName, password);
-
                 return new LoginResponse { Status = LoginStatus.Succeded, Data = accessToken };
             }
             else if (result.RequiresTwoFactor)
             {
                 //// ToDo: Check how SendTwoFactorToken works in SingleSignOn
-                
-                //var authenticationResult = await GetAuthenticationDetail(user.UserName);
-                //if (authenticationResult.IsSuccess)
-                //{
-                //    UserAuthenticationInfo authenticationDetail = (UserAuthenticationInfo)authenticationResult.Data;
 
-                //    if (authenticationDetail.TwoFactorType == Infrastructure.Utility.Constants.TwoFactorTypes.Email)
-                //        await SendTwoFactorToken(user.UserName, Infrastructure.Utility.Constants.TwoFactorTypes.Email);
-                //    else if (authenticationDetail.TwoFactorType == Infrastructure.Utility.Constants.TwoFactorTypes.Phone)
-                //        await SendTwoFactorToken(user.UserName, Infrastructure.Utility.Constants.TwoFactorTypes.Phone);
+                var authenticationResult = await GetAuthenticationDetail(user.UserName);
+                if (authenticationResult.Success)
+                {
+                    UserAuthenticationInfo authenticationDetail = (UserAuthenticationInfo)authenticationResult.Data;
 
-                //    return new LoginResponse { Status = LoginStatus.RequiresTwoFactor, Message = "Requires two factor varification.", Data = authenticationDetail };
-                //}
+                    if (authenticationDetail.TwoFactorType == Common.Utility.Constants.TwoFactorTypes.Email)
+                        await SendTwoFactorToken(user.UserName, Common.Utility.Constants.TwoFactorTypes.Email);
+                    else if (authenticationDetail.TwoFactorType == Common.Utility.Constants.TwoFactorTypes.Phone)
+                        await SendTwoFactorToken(user.UserName, Common.Utility.Constants.TwoFactorTypes.Phone);
+
+                    return new LoginResponse { Status = LoginStatus.RequiresTwoFactor, Message = "Requires two factor varification.", Data = authenticationDetail };
+                }
                 //return new LoginResponse { Status = LoginStatus.Failed, Message = authenticationResult.Message };
 
                 return new LoginResponse { Status = LoginStatus.RequiresTwoFactor, Message = "Requires two factor varification.", Data = user.UserName };
@@ -493,9 +487,9 @@ namespace BoilerplateCore.Core.Security
                     return new BaseModel { Success = false, Message = "User not exists." };
             }
 
-            //var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == user.TwoFactorTypeId);
-            //if (twoFactorType == null)
-            //    throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
+            var twoFactorType = await _dbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == user.TwoFactorTypeId);
+            if (twoFactorType == null)
+                throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
 
             var userLoginProvders = await _userManager.GetLoginsAsync(user);
             var otherLoginProvders = (await _signInManager.GetExternalAuthenticationSchemesAsync())
@@ -515,7 +509,7 @@ namespace BoilerplateCore.Core.Security
                 IsEmailConfirmed = user.EmailConfirmed,
                 HasPassword = await _userManager.HasPasswordAsync(user),
                 TwoFactorEnabled = user.TwoFactorEnabled,
-                //TwoFactorType = twoFactorType.Name,
+                TwoFactorType = twoFactorType.Name,
                 LockoutEnabled = user.LockoutEnabled,
                 LockoutEnd = user.LockoutEnd,
                 AccessFailedCount = user.AccessFailedCount,

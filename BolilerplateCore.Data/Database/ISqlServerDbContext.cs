@@ -21,6 +21,7 @@ namespace BoilerplateCore.Data.Database
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
 
         DbSet<ApplicationUser> User { get; set; }
+        DbSet<TwoFactorType> TwoFactorTypes { get; set; }
         // DbSet<Permission> Permissions { get; set; }
         DbSet<Addresses> Addresses { get; set; }
         DbSet<Country> Countries { get; set; }

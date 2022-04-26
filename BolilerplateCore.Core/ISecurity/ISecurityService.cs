@@ -24,7 +24,7 @@ namespace BoilerplateCore.Core.ISecurity
 
         Task<BaseModel> ConfirmEmail(string userId, string code);
 
-        Task<LoginResponse> Login(string userName, string password, bool persistCookie = false);
+        Task<LoginResponse> Login(string Email, string password, bool persistCookie = false);
 
         Task<LoginResponse> ExternalLogin(string loginProvider, string providerKey, bool isPersistent = false, bool bypassTwoFactor = false);
 

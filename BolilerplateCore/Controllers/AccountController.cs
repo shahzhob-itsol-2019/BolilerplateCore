@@ -19,7 +19,7 @@ using LoginResponse = BoilerplateCore.Common.Models.LoginResponse;
 namespace BoilerplateCore.CoreApi.Controllers
 {
     //[Route("api/Account")]
-    //[ApiController]
+    [ApiController]
     public class AccountController : BaseController
     {
         private readonly ISecurityService _securityService;
@@ -56,8 +56,8 @@ namespace BoilerplateCore.CoreApi.Controllers
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
-        [ActionName("Register")]
-        [Route("Account/Register")]
+        //[ActionName("Register")]
+        //[Route("Register")]
         [ServiceFilter(typeof(ValidateModelState))]
         [Produces("application/json", Type = typeof(BaseModel))]
         public async Task<IActionResult> Register(RegisterUserModel model)
@@ -78,7 +78,7 @@ namespace BoilerplateCore.CoreApi.Controllers
             }
             catch (Exception ex)
             {
-                return new BadRequestObjectResult(BaseModel.Create(success: false, message: "There was an error processing your request, please try again."));
+                return new BadRequestObjectResult(BaseModel.Create(success: false, message: ex.InnerException.Message));
 
             }
         }
@@ -144,11 +144,11 @@ namespace BoilerplateCore.CoreApi.Controllers
         {
             try
             {
-                var result = await _securityService.Login(model.UserName, model.Password, model.RememberMe);
+                var result = await _securityService.Login(model.Email, model.Password, model.RememberMe);
 
                 if (result.Status == LoginStatus.Failed)
                     return new OkObjectResult(new LoginResponse { Status = LoginStatus.Failed, Data = null, Message = result.Message });
-
+                var userId = GetUserId();
                 return new OkObjectResult(new LoginResponse { Status = result.Status, Data = result.Data, Message = result.Message });
             }
             catch (Exception ex)

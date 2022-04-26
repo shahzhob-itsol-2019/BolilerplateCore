@@ -117,6 +117,7 @@ namespace BoilerplateCore.Data.Database
             }
         }
         public virtual DbSet<ApplicationUser> User { get; set; }
+        public virtual DbSet<TwoFactorType> TwoFactorTypes { get; set; }
         public virtual DbSet<Addresses> Addresses { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<City> Cities { get; set; }

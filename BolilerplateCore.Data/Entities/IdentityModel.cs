@@ -68,11 +68,24 @@ namespace BoilerplateCore.Data.Entities
         public string VerifiedSecondLastName { get; set; }
         public string NicNumber { get; set; }
 
+        public int? CompanyId { get; set; }
+
+        public int? StatusId { get; set; }
+
+
         public TwoFactorTypes TwoFactorTypeId { get; set; }
 
 
         [ForeignKey("TwoFactorTypeId")]
         public virtual TwoFactorType TwoFactorType { get; set; }
+
+        [ForeignKey("CompanyId")]
+        public virtual Company Company { get; set; }
+
+        [ForeignKey("StatusId")]
+        public virtual Status Status { get; set; }
+
+        public virtual ICollection<Addresses> Addresses { get; set; }
 
         //public virtual ICollection<PreviousPassword> PreviousPasswords { get; set; }
     }
