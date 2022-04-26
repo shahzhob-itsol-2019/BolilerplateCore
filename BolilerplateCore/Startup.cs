@@ -5,27 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BoilerplateCore.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using BoilerplateCore.Common.Authentication;
-using BoilerplateCore.Mobile.API.Middleware;
-using BoilerplateCore.Data.DependencyResolutions;
 using BoilerplateCore.CoreApi.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
-using BoilerplateCore.CoreApi.Helpers;
-using BoilerplateCore.Services.IService;
-using BoilerplateCore.Services;
+using BoilerplateCore.Services.ServicesDependencyResolutions;
+using BoilerplateCore.Core.DependencyResolutions;
 //using BoilerplateCore.Common.Authentication;
 
 namespace BoilerplateCore.CoreApi
@@ -47,6 +29,7 @@ namespace BoilerplateCore.CoreApi
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure(Configuration);
             services.RegisterServices(Configuration);
             //services.AddScoped<IUserService, UserService>();
             //services.AddScoped<ICompanyService, CompanyService>();
@@ -65,65 +48,65 @@ namespace BoilerplateCore.CoreApi
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //var httpContextAccessor = services.BuildServiceProvider().GetService<IHttpContextAccessor>();
             
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-            {
-                options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-                options.LoginPath = new PathString("/Account/Login");
-                options.AccessDeniedPath = new PathString("/Account/Login/");
-                options.Events = new CookieAuthenticationEvents()
-                {
-                    OnValidatePrincipal = ctx =>
-                    {
-                        var ret = Task.Run(async () =>
-                        {
-                            var accessToken = ctx.Principal.FindFirst(ClaimTypes.PrimarySid)?.Value;
-                            var userName = ctx.Principal.FindFirst(ClaimTypes.Name)?.Value;
-                            var result = (await HttpClientHelper.GetAsync<UserClaim>("Account/GetUser?userName=" + userName));
-                            if (result == null || result.Data == null)
-                            {
-                                ctx.RejectPrincipal();
-                            }
-                        });
-                        return ret;
-                    },
-                    OnSigningIn = async (context) =>
-                    {
-                        ClaimsIdentity identity = (ClaimsIdentity)context.Principal.Identity;
-                        identity.AddClaim(new Claim(ClaimTypes.PrimarySid, ""));
-                        identity.AddClaim(new Claim(ClaimTypes.Sid, ""));
-                        identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, ""));
-                        identity.AddClaim(new Claim(ClaimTypes.Name, ""));
-                        identity.AddClaim(new Claim(ClaimTypes.Email, ""));
-                        identity.AddClaim(new Claim(ClaimTypes.GivenName, ""));
-                        identity.AddClaim(new Claim(ClaimTypes.Surname, ""));
-                        identity.AddClaim(new Claim(ClaimTypes.Role, ""));
-                    }
-                };
-            })
-            .AddCookie(IdentityConstants.ExternalScheme, options =>
-            {
-                options.Cookie.Name = IdentityConstants.ExternalScheme;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-                options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-                options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login/");
-            })
-            .AddMicrosoftAccount(microsoftOptions =>
-            {
-                microsoftOptions.ClientId = "68669dee-ad51-4ab0-8a8f-16f456a05917";
-                microsoftOptions.ClientSecret = "xwaxyXEPRO726#@}icBG05@";
-            })
-            .AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = "434467402013-4ehq09dvqp7qu57jucr1rra56fs0glcv.apps.googleusercontent.com";
-                googleOptions.ClientSecret = "k4kvo8ckstA6u1Da5Skkiqaj";
-            });
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            //})
+            //.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            //{
+            //    options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //    options.LoginPath = new PathString("/Account/Login");
+            //    options.AccessDeniedPath = new PathString("/Account/Login/");
+            //    options.Events = new CookieAuthenticationEvents()
+            //    {
+            //        OnValidatePrincipal = ctx =>
+            //        {
+            //            var ret = Task.Run(async () =>
+            //            {
+            //                var accessToken = ctx.Principal.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            //                var userName = ctx.Principal.FindFirst(ClaimTypes.Name)?.Value;
+            //                var result = (await HttpClientHelper.GetAsync<UserClaim>("Account/GetUser?userName=" + userName));
+            //                if (result == null || result.Data == null)
+            //                {
+            //                    ctx.RejectPrincipal();
+            //                }
+            //            });
+            //            return ret;
+            //        },
+            //        OnSigningIn = async (context) =>
+            //        {
+            //            ClaimsIdentity identity = (ClaimsIdentity)context.Principal.Identity;
+            //            identity.AddClaim(new Claim(ClaimTypes.PrimarySid, ""));
+            //            identity.AddClaim(new Claim(ClaimTypes.Sid, ""));
+            //            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, ""));
+            //            identity.AddClaim(new Claim(ClaimTypes.Name, ""));
+            //            identity.AddClaim(new Claim(ClaimTypes.Email, ""));
+            //            identity.AddClaim(new Claim(ClaimTypes.GivenName, ""));
+            //            identity.AddClaim(new Claim(ClaimTypes.Surname, ""));
+            //            identity.AddClaim(new Claim(ClaimTypes.Role, ""));
+            //        }
+            //    };
+            //})
+            //.AddCookie(IdentityConstants.ExternalScheme, options =>
+            //{
+            //    options.Cookie.Name = IdentityConstants.ExternalScheme;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+            //    options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login/");
+            //})
+            //.AddMicrosoftAccount(microsoftOptions =>
+            //{
+            //    microsoftOptions.ClientId = "68669dee-ad51-4ab0-8a8f-16f456a05917";
+            //    microsoftOptions.ClientSecret = "xwaxyXEPRO726#@}icBG05@";
+            //})
+            //.AddGoogle(googleOptions =>
+            //{
+            //    googleOptions.ClientId = "434467402013-4ehq09dvqp7qu57jucr1rra56fs0glcv.apps.googleusercontent.com";
+            //    googleOptions.ClientSecret = "k4kvo8ckstA6u1Da5Skkiqaj";
+            //});
 
             //Local dependencies
             services.AddScoped<CurrentUser>();
@@ -159,13 +142,20 @@ namespace BoilerplateCore.CoreApi
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseMvc(routes =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapGet("/", async context =>
+            //    {
+            //        await context.Response.WriteAsync("Hello World!");
+            //    });
+            //});
         }
     }
 }

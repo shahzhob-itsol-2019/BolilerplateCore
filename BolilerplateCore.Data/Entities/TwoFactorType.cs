@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using static BoilerplateCore.Common.Utility.Enums;
 
-namespace BoilerplateCore.Core.Entities
+namespace BoilerplateCore.Data.Entities
 {
     public class TwoFactorType
     {

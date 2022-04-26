@@ -12,7 +12,7 @@ using BoilerplateCore.Common.Options;
 using BoilerplateCore.Data.IRepository;
 using BoilerplateCore.Data.Repository;
 
-namespace BoilerplateCore.Data.DependencyResolutions
+namespace BoilerplateCore.Core.DependencyResolutions
 {
     public static class RepositoryModule
     {
@@ -49,11 +49,11 @@ namespace BoilerplateCore.Data.DependencyResolutions
                 services.AddHealthChecks();
 
                 services.BuildServiceProvider().GetService<UserManager<ApplicationUser>>();
-                services.AddTransient<IDbContext, SqlServerDbContext>();
+                services.AddTransient<ISqlServerDbContext, SqlServerDbContext>();
             }
 
-            services.AddScoped<IDbContext, SqlServerDbContext>();
-            services.AddScoped<IUnitOfWork>(unitOfWork => new UnitOfWork(unitOfWork.GetService<IDbContext>()));
+            services.AddScoped<ISqlServerDbContext, SqlServerDbContext>();
+            services.AddScoped<IUnitOfWork>(unitOfWork => new UnitOfWork(unitOfWork.GetService<ISqlServerDbContext>()));
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ICompanyRepository, CompanyRepository>();

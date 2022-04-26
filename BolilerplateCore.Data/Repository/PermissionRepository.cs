@@ -9,7 +9,7 @@ namespace BoilerplateCore.Data.Repository
 {
     public class PermissionRepository : BaseRepository<Permission, int>, IPermissionRepository
     {
-        public PermissionRepository(IDbContext context) : base(context)
+        public PermissionRepository(ISqlServerDbContext context) : base(context)
         {
         }
     }

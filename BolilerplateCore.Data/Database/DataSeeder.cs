@@ -77,41 +77,6 @@ namespace BoilerplateCore.Data.Database
                         await context.SaveChangesAsync();
                     }
                 }
-
-                //var countries = new List<Country>()
-                //{
-                //    new Country() { Name = "Pakistan", Code = CountryCode.Pakistan, Nationality = "Pakistani" },
-                //    new Country() { Name = "Canada", Code = CountryCode.Canada, Nationality = "Canadian" }
-                //};
-                //var newCountries = countries.Where(s => !context.Countries.Select(st => st.Name).Contains(s.Name));
-                //if (newCountries.Any())
-                //{
-                //    await context.Countries.AddRangeAsync(newCountries);
-                //    await context.SaveChangesAsync();
-                //}
-
-                //var statuses = new List<Status>()
-                //{
-                //    // Application statuses
-                //    new Status() { Name = "None", Code = ApplicationStausCode.None, Type = StatusType.ApplicionStatus },
-                //};
-                //var newStatuses = statuses.Where(s => !context.Statuses.Select(st => st.Name).Contains(s.Name));
-                //if (newStatuses.Any())
-                //{
-                //    await context.Statuses.AddRangeAsync(newStatuses);
-                //    await context.SaveChangesAsync();
-                //}
-
-                //var minerals = new List<Mineral>()
-                //{
-                //    new Mineral() { Name = "Gold", Code = MineralCode.Gold, Cost = 3000 },
-                //};
-                //var newMinerals = minerals.Where(s => !context.Minerals.Select(st => st.Name).Contains(s.Name));
-                //if (newMinerals.Any())
-                //{
-                //    await context.Minerals.AddRangeAsync(newMinerals);
-                //    await context.SaveChangesAsync();
-                //}
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using BoilerplateCore.Data.Entities;
+﻿//using BoilerplateCore.Data.Entities;
+using BoilerplateCore.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BoilerplateCore.Data.Database
 {
-    public interface IDbContext : IDisposable
+    public interface ISqlServerDbContext : IDisposable
     {
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 

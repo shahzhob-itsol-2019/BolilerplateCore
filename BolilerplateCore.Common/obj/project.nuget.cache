@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "PXqRe+gm6/RRuGSzGmFaXxMvWEIPplFeZ6JJr8HQDNgl3y+X2+mMkVTRKCGRpUizUiMdAmM2J/9jAiBoEKmcAA==",
+  "dgSpecHash": "2SCJPIQiR92vbiYrnJRS0GEMDk8fpblboXTPd/fKxnVIowhGjnGT7rn3sAvQckTe5wDtyYZRttBs5/fzgRq/Ew==",
   "success": true,
   "projectFilePath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Common\\BoilerplateCore.Common.csproj",
   "expectedPackageFiles": [
@@ -61,8 +61,7 @@
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.dotnet.platformabstractions\\2.1.0\\microsoft.dotnet.platformabstractions.2.1.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\3.1.1\\microsoft.extensions.caching.abstractions.3.1.1.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.caching.memory\\3.1.1\\microsoft.extensions.caching.memory.3.1.1.nupkg.sha512",
-    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.configuration\\3.1.20\\microsoft.extensions.configuration.3.1.20.nupkg.sha512",
-    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\3.1.20\\microsoft.extensions.configuration.abstractions.3.1.20.nupkg.sha512",
+    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\2.2.0\\microsoft.extensions.configuration.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\2.2.0\\microsoft.extensions.dependencyinjection.2.2.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\3.1.1\\microsoft.extensions.dependencyinjection.abstractions.3.1.1.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.dependencymodel\\2.1.0\\microsoft.extensions.dependencymodel.2.1.0.nupkg.sha512",
@@ -75,7 +74,7 @@
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.1.1\\microsoft.extensions.logging.abstractions.3.1.1.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.objectpool\\2.2.0\\microsoft.extensions.objectpool.2.2.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.options\\3.1.1\\microsoft.extensions.options.3.1.1.nupkg.sha512",
-    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.primitives\\3.1.20\\microsoft.extensions.primitives.3.1.20.nupkg.sha512",
+    "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.primitives\\3.1.1\\microsoft.extensions.primitives.3.1.1.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.extensions.webencoders\\2.2.0\\microsoft.extensions.webencoders.2.2.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\5.5.0\\microsoft.identitymodel.jsonwebtokens.5.5.0.nupkg.sha512",
     "C:\\Users\\Shahzhob OSL\\.nuget\\packages\\microsoft.identitymodel.logging\\5.5.0\\microsoft.identitymodel.logging.5.5.0.nupkg.sha512",

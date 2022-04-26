@@ -9,7 +9,7 @@ namespace BoilerplateCore.Data.Repository
 {
     public class StatusRepository : BaseRepository<Status, int>, IStatusRepository
     {
-        public StatusRepository(IDbContext context) : base(context)
+        public StatusRepository(ISqlServerDbContext context) : base(context)
         {
         }
     }

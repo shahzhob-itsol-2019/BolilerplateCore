@@ -10,20 +10,20 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace BoilerplateCore.Data.DependencyResolutions
+namespace BoilerplateCore.Core.DependencyResolutions
 {
     public static class InfrastructureModule
     {
         public static void Configure(IServiceCollection services, IConfiguration configuration)
         {
             ConfigurationModule.Configure(services, configuration);
-            //Documentations.RegisterServices(services);
+            Documentations.RegisterServices(services);
             Utilities.RegisterServices(services);
         }
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //Documentations.RegisterApps(app);
+            Documentations.RegisterApps(app);
             Utilities.RegisterApps(app);
         }
     }

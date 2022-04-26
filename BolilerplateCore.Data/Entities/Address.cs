@@ -1,8 +1,9 @@
-﻿using BoilerplateCore.Data.Entities;
+﻿//using BoilerplateCore.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+//using ApplicationUser = BoilerplateCore.Core.Entities.ApplicationUser;
 
 namespace BoilerplateCore.Data.Entities
 {

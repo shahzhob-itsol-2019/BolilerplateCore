@@ -9,9 +9,9 @@ namespace BoilerplateCore.Data.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly IDbContext dbContext;
+        private readonly ISqlServerDbContext dbContext;
 
-        public UnitOfWork(IDbContext context)
+        public UnitOfWork(ISqlServerDbContext context)
         {
             dbContext = context;
         }

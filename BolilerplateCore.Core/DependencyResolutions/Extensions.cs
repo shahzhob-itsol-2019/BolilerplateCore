@@ -1,5 +1,4 @@
-﻿using BoilerplateCore.Data.DependencyResolutions;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,14 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoilerplateCore.Data.DependencyResolutions
+namespace BoilerplateCore.Core.DependencyResolutions
 {
     public static class Extensions
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
             InfrastructureModule.Configure(services, configuration);
-            ServiceModule.Configure(services);
             RepositoryModule.Configure(services, configuration);
             ComponentModule.Configure(services);
             

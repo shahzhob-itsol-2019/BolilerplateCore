@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BoilerplateCore.Data.DependencyResolutions
+namespace BoilerplateCore.Core.DependencyResolutions
 {
     public static class Utilities
     {

@@ -9,7 +9,7 @@ namespace BoilerplateCore.Data.Repository
 {
     public class NotificationTemplateRepository : BaseRepository<NotificationTemplate, int>, INotificationTemplateRepository
     {
-        public NotificationTemplateRepository(IDbContext context) : base(context)
+        public NotificationTemplateRepository(ISqlServerDbContext context) : base(context)
         {
         }
     }

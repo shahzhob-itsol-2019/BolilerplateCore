@@ -9,7 +9,7 @@ namespace BoilerplateCore.Data.Repository
 {
     public class CountryRepository : BaseRepository<Country, int>, ICountryRepository
     {
-        public CountryRepository(IDbContext context) : base(context)
+        public CountryRepository(ISqlServerDbContext context) : base(context)
         {
         }
     }

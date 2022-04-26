@@ -12,7 +12,7 @@ namespace BoilerplateCore.Data.Repository
 {
     public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey> where TEntity : class
     {
-        private IDbContext dbContext;
+        private ISqlServerDbContext dbContext;
         private DbSet<TEntity> dbSet;
 
         public DbSet<TEntity> DbSet
@@ -21,13 +21,13 @@ namespace BoilerplateCore.Data.Repository
             private set { dbSet = value; }
         }
 
-        public IDbContext DbContext
+        public ISqlServerDbContext DbContext
         {
             get { return dbContext; }
             private set { dbContext = value; }
         }
 
-        public BaseRepository(IDbContext dbContext)
+        public BaseRepository(ISqlServerDbContext dbContext)
         {
             this.dbContext = dbContext;
             dbSet = dbContext.Set<TEntity>();

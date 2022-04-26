@@ -9,7 +9,7 @@ namespace BoilerplateCore.Data.Repository
 {
     public class CompanyRepository : BaseRepository<Company, int>, ICompanyRepository
     {
-        public CompanyRepository(IDbContext context) : base(context)
+        public CompanyRepository(ISqlServerDbContext context) : base(context)
         {
         }
     }

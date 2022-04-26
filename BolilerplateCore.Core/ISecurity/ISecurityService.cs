@@ -12,14 +12,15 @@ namespace BoilerplateCore.Core.ISecurity
 {
     public interface ISecurityService
     {
-        Task<BaseModel> CreateUser(string firstName, string lastName, string userName, string email, string phoneNumber, string password, string confirmpassword, bool createActivated);
+        Task<BaseModel> CreateUser(RegisterUserModel model);
 
         //Reasoning: Since this project does't have knowlege about IdentityUser,IdentityUser<Tkey> hence object datatype is selected
         Task<AuthenticationResponse> CreateUser(object user, string password);
 
-        Task<LoginResponse> CreateExternalUser(string firstName, string lastName, string email, string loginProvider, string providerKey, string displayName);
+        Task<LoginResponse> CreateExternalUser(RegisterExternalModel model);
 
         Task<AuthenticationResponse> GenerateEmailVerificationToken(string email);
+        Task<BaseModel> UpdateUserDetail(UserModel userInfo);
 
         Task<BaseModel> ConfirmEmail(string userId, string code);
 

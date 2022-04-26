@@ -38,8 +38,12 @@ namespace BoilerplateCore.Core.Security
         private IHttpContextAccessor contextAccessor;
         private readonly IHttpClient _httpClient;
         private readonly SecurityOptions securityOptions;
+        private readonly BoilerplateOptions boilerplateOptions;
 
-        public SecuritySingleSignOn(IOptionsSnapshot<SecurityOptions> securityOptions, IHttpContextAccessor contextAccessor, IHttpClient httpClient)
+        public SecuritySingleSignOn(
+            IOptionsSnapshot<BoilerplateOptions> boilerplateOptions,
+            IOptionsSnapshot<SecurityOptions> securityOptions,
+            IHttpContextAccessor contextAccessor, IHttpClient httpClient)
         {
             this.securityOptions = securityOptions.Value;
             authority = this.securityOptions.Authority;
@@ -53,16 +57,16 @@ namespace BoilerplateCore.Core.Security
             _httpClient = httpClient;
         }
 
-        public async Task<BaseModel> CreateUser(string firstName, string lastName, string userName, string email, string phoneNumber, string password, string confirmpassword, bool createActivated)
+        public async Task<BaseModel> CreateUser(RegisterUserModel model)
         {
             var content = new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("UserName", userName),
-                new KeyValuePair<string, string>("Email", email),
-                new KeyValuePair<string, string>("Password", password),
+                new KeyValuePair<string, string>("UserName", model.UserName),
+                new KeyValuePair<string, string>("Email", model.Email),
+                new KeyValuePair<string, string>("Password", model.Password),
                 new KeyValuePair<string, string>("ClientID", clientId),
-                new KeyValuePair<string, string>("ConfirmPassword", confirmpassword),
-                new KeyValuePair<string, string>("CreateActivated", createActivated.ToString()),
+                new KeyValuePair<string, string>("ConfirmPassword", model.ConfirmPassword),
+                new KeyValuePair<string, string>("CreateActivated", model.CreateActivated.ToString()),
             });
 
             var response = await _httpClient.PostAsync<AuthenticationResponse>(baseUri + "Account/Register", content);
@@ -72,7 +76,7 @@ namespace BoilerplateCore.Core.Security
         {
             throw new NotImplementedException();
         }
-        public async Task<LoginResponse> CreateExternalUser(string firstName, string lastName, string email, string loginProvider, string providerKey, string displayName)
+        public async Task<LoginResponse> CreateExternalUser(RegisterExternalModel model)
         {
             throw new NotImplementedException();
         }
@@ -99,6 +103,30 @@ namespace BoilerplateCore.Core.Security
             var response = await _httpClient.PostAsync<BaseModel>(baseUri + "account/VerifyEmail", content);
             return response.Data;
         }
+
+        //public async Task<BaseModel> SendEmailCode(string userId, string email)
+        //{
+        //    var userResult = await GetUserDetail(userId);
+        //    if (!userResult.Success)
+        //        return new BaseModel { Success = false, Message = userResult.Message };
+        //    var user = (Common.Models.UserInfo)userResult.Data;
+
+        //    var tokenResult = await GenerateChangeEmailToken(userId, email);
+        //    if (!tokenResult.Success)
+        //        return new BaseModel { Success = false, Message = tokenResult.Message };
+        //    var token = (string)tokenResult.Data;
+
+        //    var link = boilerplateOptions.WebUrl + "Account/ChangeEmail?userId=" + user.Id + "&email=" + email + "&code=" + HttpUtility.UrlEncode(token);
+        //    var template = await _notificationTemplateService.GetNotificationTemplate(NotificationTemplates.EmailChangePassword, NotificationTypes.Email);
+        //    var emailMessage = template.MessageBody.Replace("#Name", $"{ user.FirstName} { user.LastName}")
+        //                                           .Replace("#Link", $"{link}");
+
+        //    var sent = await _communicationService.SendEmail(template.Subject, emailMessage, email);
+        //    if (!sent)
+        //        return BaseModel.Failed("Confirmation link cannot be sent, plz try again latter");
+
+        //    return new BaseModel { Success = true, Message = $"A confirmation link has been sent to {email}, please verify your email to change it." };
+        //}
 
         public async Task<LoginResponse> Login(string userName, string password, bool persistCookie = false)
         {
@@ -493,6 +521,11 @@ namespace BoilerplateCore.Core.Security
         {
             //await _signInManager.SignOutAsync();
             return null;
+        }
+
+        public Task<BaseModel> UpdateUserDetail(UserModel userInfo)
+        {
+            throw new NotImplementedException();
         }
     }
 }

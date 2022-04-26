@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using BoilerplateCore.Core.Security;
 using BoilerplateCore.Core.Communication;
 
-namespace BoilerplateCore.Data.DependencyResolutions
+namespace BoilerplateCore.Core.DependencyResolutions
 {
     public static class ComponentModule
     {

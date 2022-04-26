@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using static BoilerplateCore.Common.Utility.Enums;
 
 namespace BoilerplateCore.Data.Entities
 {
@@ -66,5 +67,13 @@ namespace BoilerplateCore.Data.Entities
         [MaxLength(60)]
         public string VerifiedSecondLastName { get; set; }
         public string NicNumber { get; set; }
+
+        public TwoFactorTypes TwoFactorTypeId { get; set; }
+
+
+        [ForeignKey("TwoFactorTypeId")]
+        public virtual TwoFactorType TwoFactorType { get; set; }
+
+        //public virtual ICollection<PreviousPassword> PreviousPasswords { get; set; }
     }
 }

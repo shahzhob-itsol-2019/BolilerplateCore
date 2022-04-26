@@ -15,7 +15,6 @@
     <PackageReference Include="Abp.Web.Common" Version="5.2.0" />
     <PackageReference Include="JWT" Version="6.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.20" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="5.5.0" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="5.5.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.5.0" />

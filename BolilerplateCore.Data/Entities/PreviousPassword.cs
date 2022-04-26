@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace BoilerplateCore.Core.Entities
+namespace BoilerplateCore.Data.Entities
 {
     public class PreviousPassword
     {

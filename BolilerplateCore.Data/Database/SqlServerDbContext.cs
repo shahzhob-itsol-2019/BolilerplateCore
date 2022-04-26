@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BoilerplateCore.Data.Database
 {
-    public class SqlServerDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>, IDbContext
+    public class SqlServerDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>, ISqlServerDbContext
     {
         private readonly IConfiguration configuration;
         public SqlServerDbContext(DbContextOptions<SqlServerDbContext> options, IConfiguration configuration) 
@@ -116,7 +116,7 @@ namespace BoilerplateCore.Data.Database
                 }
             }
         }
-        public DbSet<ApplicationUser> User { get; set; }
+        public virtual DbSet<ApplicationUser> User { get; set; }
         public virtual DbSet<Addresses> Addresses { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<City> Cities { get; set; }
@@ -128,7 +128,5 @@ namespace BoilerplateCore.Data.Database
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<NotificationTemplate> NotificationTemplates { get; set; }
         public virtual DbSet<NotificationType> NotificationTypes { get; set; }
-
-        //public virtual DbSet<Country> Countries { get; set; }
     }
 }

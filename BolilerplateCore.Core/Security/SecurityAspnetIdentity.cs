@@ -1,9 +1,9 @@
 ﻿using BoilerplateCore.Common.Helpers;
 using BoilerplateCore.Common.Models;
 using BoilerplateCore.Common.Options;
-//using BoilerplateCore.Common.Utility;
 using BoilerplateCore.Core.Entities;
 using BoilerplateCore.Core.ISecurity;
+using BoilerplateCore.Data.Entities;
 using IdentityModel;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Identity;
@@ -34,7 +34,6 @@ namespace BoilerplateCore.Core.Security
         protected readonly UserManager<ApplicationUser> _userManager;
         protected readonly RoleManager<IdentityRole> _roleManager;
         protected readonly SignInManager<ApplicationUser> _signInManager;
-        protected readonly ISecurityDbContext _securityDbContext;
         private readonly UrlEncoder _urlEncoder;
 
         private string clientId = string.Empty;
@@ -50,7 +49,6 @@ namespace BoilerplateCore.Core.Security
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
-            ISecurityDbContext securityDbContext,
             UrlEncoder urlEncoder)
         {
             this.securityOptions = securityOptions.Value;
@@ -58,7 +56,6 @@ namespace BoilerplateCore.Core.Security
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
-            _securityDbContext = securityDbContext;
             _urlEncoder = urlEncoder;
 
             clientId = this.securityOptions.ClientId;
@@ -69,31 +66,34 @@ namespace BoilerplateCore.Core.Security
             apiUrl = this.boilerplateOptions.ApiUrl;
         }
 
-        public async Task<BaseModel> CreateUser(string firstName, string lastName, string userName, string email, string phoneNumber, string password, string confirmpassword, bool createActivated)
+        public async Task<BaseModel> CreateUser(RegisterUserModel model)
         {
             var user = new ApplicationUser
             {
-                UserName = userName,
-                Email = email,
-                PhoneNumber = phoneNumber,
-                EmailConfirmed = createActivated,
+                UserName = model.UserName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                EmailConfirmed = model.CreateActivated,
                 TwoFactorTypeId = TwoFactorTypes.None
             };
-            var result = await _userManager.CreateAsync(user, password);
+            try
+            {
+                var result = await _userManager.CreateAsync(user, model.Password);
+            
             if (result.Succeeded)
             {
-                await AddPreviousPassword(user, password);
+                await AddPreviousPassword(user, model.Password);
                 await _userManager.AddToRoleAsync(user, UserRoles.User.ToString());
 
-                if (!string.IsNullOrWhiteSpace(firstName))
-                    await AddUserClaim(user.Id, JwtClaimTypes.GivenName.ToString(), firstName);
-                if (!string.IsNullOrWhiteSpace(lastName))
-                    await AddUserClaim(user.Id, JwtClaimTypes.FamilyName.ToString(), lastName);
+                if (!string.IsNullOrWhiteSpace(model.FirstName))
+                    await AddUserClaim(user.Id, JwtClaimTypes.GivenName.ToString(), model.FirstName);
+                if (!string.IsNullOrWhiteSpace(model.LastName))
+                    await AddUserClaim(user.Id, JwtClaimTypes.FamilyName.ToString(), model.LastName);
                 await AddUserClaim(user.Id, JwtClaimTypes.Name, user.UserName);
                 await AddUserClaim(user.Id, JwtClaimTypes.Email, user.Email);
                 await AddUserClaim(user.Id, JwtClaimTypes.Role, UserRoles.User.ToString());
 
-                if (!createActivated)
+                if (!model.CreateActivated)
                 {
                     var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     return new BaseModel { Success = true, Data = emailConfirmationToken, Message = "Account created successfully." };
@@ -112,8 +112,43 @@ namespace BoilerplateCore.Core.Security
             }
             var errorMessaeg = result.Errors.Aggregate("", (current, error) => current + (error.Description + "\n")).TrimEnd('\n');
             return new BaseModel { Success = false, Message = errorMessaeg };
-        }
+            }
+            catch (Exception ex)
+            {
 
+                throw;
+            }
+        }
+        public async Task<BaseModel> UpdateUserDetail(UserModel userInfo)
+        {
+            var user = await _userManager.FindByIdAsync(userInfo.Id);
+            if (user == null)
+                return new BaseModel { Success = false, Message = "User not exists." };
+
+            if (!string.IsNullOrWhiteSpace(userInfo.FirstName))
+                user.FirstName = userInfo.FirstName;
+            if (!string.IsNullOrWhiteSpace(userInfo.LastName))
+                user.LastName = userInfo.LastName;
+            //if (!string.IsNullOrWhiteSpace(userInfo.Address))
+            //    user.Address = userInfo.Address;
+            //if (!string.IsNullOrWhiteSpace(userInfo.Gender))
+            //    user.Gender = userInfo.Gender;
+            //if (userInfo.BirthDate.HasValue)
+            //    user.BirthDate = userInfo.BirthDate.Value;
+            //if (!string.IsNullOrWhiteSpace(userInfo.Picture))
+            //    user.Picture = userInfo.Picture;
+
+            await _userManager.UpdateAsync(user);
+            //var userUpdateResult = await Update(user);
+            //if (!userUpdateResult.Succeeded)
+            //{
+            //    var message = userUpdateResult.Errors.FirstOrDefault() != null
+            //                       ? userUpdateResult.Errors.FirstOrDefault().Description
+            //                       : "Faild to update user detail.";
+            //    return new BaseModel { Success = false, Message = message };
+            //}
+            return new BaseModel { Success = true, Message = "User info has been successfully updated." };
+        }
         public async Task<AuthenticationResponse> CreateUser(object user, string password)
         {
             var appUser = (ApplicationUser)user;
@@ -155,12 +190,12 @@ namespace BoilerplateCore.Core.Security
             return new AuthenticationResponse { ResponseType = ResponseType.Error, Data = errorMessaeg };
         }
 
-        public async Task<LoginResponse> CreateExternalUser(string firstName, string lastName, string email, string loginProvider, string providerKey, string displayName)
+        public async Task<LoginResponse> CreateExternalUser(RegisterExternalModel model)
         {
             var user = new ApplicationUser
             {
-                UserName = email,
-                Email = email,
+                UserName = model.Email,
+                Email = model.Email,
                 TwoFactorTypeId = TwoFactorTypes.None
             };
             var result = await _userManager.CreateAsync(user);
@@ -168,21 +203,21 @@ namespace BoilerplateCore.Core.Security
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.User.ToString());
 
-                if (!string.IsNullOrWhiteSpace(firstName))
-                    await AddUserClaim(user.Id, JwtClaimTypes.GivenName.ToString(), firstName);
-                if (!string.IsNullOrWhiteSpace(lastName))
-                    await AddUserClaim(user.Id, JwtClaimTypes.FamilyName.ToString(), lastName);
+                if (!string.IsNullOrWhiteSpace(model.FirstName))
+                    await AddUserClaim(user.Id, JwtClaimTypes.GivenName.ToString(), model.FirstName);
+                if (!string.IsNullOrWhiteSpace(model.LastName))
+                    await AddUserClaim(user.Id, JwtClaimTypes.FamilyName.ToString(), model.LastName);
                 await AddUserClaim(user.Id, JwtClaimTypes.Name, user.UserName);
                 await AddUserClaim(user.Id, JwtClaimTypes.Email, user.Email);
                 await AddUserClaim(user.Id, JwtClaimTypes.Role, UserRoles.User.ToString());
 
-                var loginInfo = await AddLogin(user.Id, loginProvider, providerKey, displayName);
+                var loginInfo = await AddLogin(user.Id, model.Provider, model.ProviderKey, model.ProviderDisplayName);
                 if (!loginInfo.Success)
                 {
                     result = await _userManager.DeleteAsync(user);
                     return new LoginResponse { Status = LoginStatus.Failed, Message = loginInfo.Message };
                 }
-                var login = await ExternalLogin(loginProvider, providerKey);
+                var login = await ExternalLogin(model.Provider, model.ProviderKey);
                 return login;
             }
             var errorMessaeg = result.Errors.Aggregate("", (current, error) => current + (error.Description + "\n")).TrimEnd('\n');
@@ -458,9 +493,9 @@ namespace BoilerplateCore.Core.Security
                     return new BaseModel { Success = false, Message = "User not exists." };
             }
 
-            var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == user.TwoFactorTypeId);
-            if (twoFactorType == null)
-                throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
+            //var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == user.TwoFactorTypeId);
+            //if (twoFactorType == null)
+            //    throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
 
             var userLoginProvders = await _userManager.GetLoginsAsync(user);
             var otherLoginProvders = (await _signInManager.GetExternalAuthenticationSchemesAsync())
@@ -480,7 +515,7 @@ namespace BoilerplateCore.Core.Security
                 IsEmailConfirmed = user.EmailConfirmed,
                 HasPassword = await _userManager.HasPasswordAsync(user),
                 TwoFactorEnabled = user.TwoFactorEnabled,
-                TwoFactorType = twoFactorType.Name,
+                //TwoFactorType = twoFactorType.Name,
                 LockoutEnabled = user.LockoutEnabled,
                 LockoutEnd = user.LockoutEnd,
                 AccessFailedCount = user.AccessFailedCount,
@@ -504,15 +539,15 @@ namespace BoilerplateCore.Core.Security
 
             var roles = (await _userManager.GetRolesAsync(user)).ToList();
 
-            var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(user.Id));
-            if (appUser == null)
-                return new BaseModel { Success = false, Message = "User not exists." };
+            //var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(user.Id));
+            //if (appUser == null)
+            //    return new BaseModel { Success = false, Message = "User not exists." };
 
             var userClaims = new UserClaims
             {
                 Id = user.Id,
-                FirstName = appUser.FirstName,
-                LastName = appUser.LastName,
+                //FirstName = appUser.FirstName,
+                //LastName = appUser.LastName,
                 UserName = user.UserName,
                 Email = user.Email,
                 Roles = roles
@@ -528,15 +563,15 @@ namespace BoilerplateCore.Core.Security
 
             var roles = (await _userManager.GetRolesAsync(user)).ToList();
 
-            var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(user.Id));
-            if (appUser == null)
-                return new BaseModel { Success = false, Message = "User not exists." };
+            //var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(user.Id));
+            //if (appUser == null)
+            //    return new BaseModel { Success = false, Message = "User not exists." };
 
             var userClaims = new UserClaims
             {
                 Id = user.Id,
-                FirstName = appUser.FirstName,
-                LastName = appUser.LastName,
+                //FirstName = appUser.FirstName,
+                //LastName = appUser.LastName,
                 UserName = user.UserName,
                 Email = user.Email,
                 Roles = roles
@@ -550,15 +585,15 @@ namespace BoilerplateCore.Core.Security
             if (user == null)
                 return new BaseModel { Success = false, Message = "User not exists." };
 
-            var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(user.Id));
-            if (appUser == null)
-                return new BaseModel { Success = false, Message = "User not exists." };
+            //var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(user.Id));
+            //if (appUser == null)
+            //    return new BaseModel { Success = false, Message = "User not exists." };
 
             var userInfo = new UserInfo
             {
                 Id = user.Id,
-                FirstName = appUser.FirstName,
-                LastName = appUser.LastName,
+                //FirstName = appUser.FirstName,
+                //LastName = appUser.LastName,
                 UserName = user.UserName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber
@@ -575,25 +610,25 @@ namespace BoilerplateCore.Core.Security
             var userDetails = new List<UserDetail>();
             foreach (var user in users)
             {
-                var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == user.TwoFactorTypeId);
-                if (twoFactorType == null)
-                    throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
+                //var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == user.TwoFactorTypeId);
+                //if (twoFactorType == null)
+                //    throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
 
-                var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(user.Id));
-                if (appUser == null)
-                    return new BaseModel { Success = false, Message = "User not exists." };
+                //var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(user.Id));
+                //if (appUser == null)
+                //    return new BaseModel { Success = false, Message = "User not exists." };
 
                 var userDetail = new UserDetail();
                 userDetail.Id = user.Id;
-                userDetail.FirstName = appUser.FirstName;
-                userDetail.LastName = appUser.LastName;
+                //userDetail.FirstName = appUser.FirstName;
+                //userDetail.LastName = appUser.LastName;
                 userDetail.UserName = user.UserName;
                 userDetail.Email = user.Email;
                 userDetail.PhoneNumber = user.PhoneNumber;
                 userDetail.IsEmailConfirmed = user.EmailConfirmed;
                 userDetail.HasPassword = string.IsNullOrWhiteSpace(user.PasswordHash);
                 userDetail.TwoFactorEnabled = user.TwoFactorEnabled;
-                userDetail.TwoFactorType = twoFactorType.Name;
+                //userDetail.TwoFactorType = twoFactorType.Name;
                 userDetail.LockoutEnabled = user.LockoutEnabled;
                 userDetail.LockoutEnd = user.LockoutEnd;
                 userDetail.AccessFailedCount = user.AccessFailedCount;
@@ -630,25 +665,25 @@ namespace BoilerplateCore.Core.Security
             {
                 var applicationUser = (ApplicationUser)user;
 
-                var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == applicationUser.TwoFactorTypeId);
-                if (twoFactorType == null)
-                    throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
+                //var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == applicationUser.TwoFactorTypeId);
+                //if (twoFactorType == null)
+                //    throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
 
-                var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(applicationUser.Id));
-                if (appUser == null)
-                    return new BaseModel { Success = false, Message = "User not exists." };
+                //var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(applicationUser.Id));
+                //if (appUser == null)
+                //    return new BaseModel { Success = false, Message = "User not exists." };
 
                 var userDetail = new UserDetail();
                 userDetail.Id = applicationUser.Id;
-                userDetail.FirstName = appUser.FirstName;
-                userDetail.LastName = appUser.LastName;
+                //userDetail.FirstName = appUser.FirstName;
+                //userDetail.LastName = appUser.LastName;
                 userDetail.UserName = applicationUser.UserName;
                 userDetail.Email = applicationUser.Email;
                 userDetail.PhoneNumber = applicationUser.PhoneNumber;
                 userDetail.IsEmailConfirmed = applicationUser.EmailConfirmed;
                 userDetail.HasPassword = string.IsNullOrWhiteSpace(applicationUser.PasswordHash);
                 userDetail.TwoFactorEnabled = applicationUser.TwoFactorEnabled;
-                userDetail.TwoFactorType = twoFactorType.Name;
+                //userDetail.TwoFactorType = twoFactorType.Name;
                 userDetail.LockoutEnabled = applicationUser.LockoutEnabled;
                 userDetail.LockoutEnd = applicationUser.LockoutEnd;
                 userDetail.AccessFailedCount = applicationUser.AccessFailedCount;
@@ -697,18 +732,18 @@ namespace BoilerplateCore.Core.Security
             {
                 var applicationUser = (ApplicationUser)user;
 
-                var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == applicationUser.TwoFactorTypeId);
-                if (twoFactorType == null)
-                    throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
+                //var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Id == applicationUser.TwoFactorTypeId);
+                //if (twoFactorType == null)
+                //    throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
 
-                var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(applicationUser.Id));
-                if (appUser == null)
-                    return new BaseModel { Success = false, Message = "User not exists." };
+                //var appUser = await _securityDbContext.AppUsers.FirstOrDefaultAsync(u => u.Id.Equals(applicationUser.Id));
+                //if (appUser == null)
+                //    return new BaseModel { Success = false, Message = "User not exists." };
 
                 var userDetail = new UserDetail();
                 userDetail.Id = applicationUser.Id;
-                userDetail.FirstName = appUser.FirstName;
-                userDetail.LastName = appUser.LastName;
+                //userDetail.FirstName = appUser.FirstName;
+                //userDetail.LastName = appUser.LastName;
                 userDetail.UserName = applicationUser.UserName;
                 userDetail.Email = applicationUser.Email;
                 userDetail.PhoneNumber = applicationUser.PhoneNumber;
@@ -716,7 +751,7 @@ namespace BoilerplateCore.Core.Security
                 userDetail.HasPassword = string.IsNullOrWhiteSpace(applicationUser.PasswordHash);
                 userDetail.TwoFactorEnabled = applicationUser.TwoFactorEnabled;
                 userDetail.TwoFactorType = applicationUser.TwoFactorType.Name;
-                userDetail.TwoFactorType = twoFactorType.Name;
+                //userDetail.TwoFactorType = twoFactorType.Name;
                 userDetail.LockoutEnabled = applicationUser.LockoutEnabled;
                 userDetail.LockoutEnd = applicationUser.LockoutEnd;
                 userDetail.AccessFailedCount = applicationUser.AccessFailedCount;
@@ -1094,9 +1129,9 @@ namespace BoilerplateCore.Core.Security
             if (user == null)
                 return new AuthenticationResponse { ResponseType = ResponseType.Error, Data = "No user exists with the specified user Id." };
 
-            var previousPasswordValidation = await ValidatePreviousPassword(user, password);
-            if (previousPasswordValidation.ResponseType.Equals(ResponseType.Error))
-                return previousPasswordValidation;
+            //var previousPasswordValidation = await ValidatePreviousPassword(user, password);
+            //if (previousPasswordValidation.ResponseType.Equals(ResponseType.Error))
+            //    return previousPasswordValidation;
 
             var result = await _userManager.ResetPasswordAsync(user, code, password);
             if (result.Succeeded)
@@ -1127,9 +1162,9 @@ namespace BoilerplateCore.Core.Security
                     return new AuthenticationResponse { ResponseType = ResponseType.Error, Data = "No user exists with the specified email/username." };
             }
 
-            var previousPasswordValidation = await ValidatePreviousPassword(user, newPassword);
-            if (previousPasswordValidation.ResponseType.Equals(ResponseType.Error))
-                return previousPasswordValidation;
+            //var previousPasswordValidation = await ValidatePreviousPassword(user, newPassword);
+            //if (previousPasswordValidation.ResponseType.Equals(ResponseType.Error))
+            //    return previousPasswordValidation;
 
             var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
             if (result.Succeeded)
@@ -1425,11 +1460,11 @@ namespace BoilerplateCore.Core.Security
                 return new BaseModel { Success = false, Message = message };
             }
 
-            var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Name.Equals(tokenProvider));
-            if (twoFactorType == null)
-                throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
+            //var twoFactorType = await _securityDbContext.TwoFactorTypes.FirstOrDefaultAsync(t => t.Name.Equals(tokenProvider));
+            //if (twoFactorType == null)
+            //    throw new Exception($"{nameof(twoFactorType)} is not found in the system.");
 
-            user.TwoFactorTypeId = twoFactorType.Id;
+            //user.TwoFactorTypeId = twoFactorType.Id;
             var userUpdateResult = await _userManager.UpdateAsync(user);
             if (!userUpdateResult.Succeeded)
             {
@@ -1574,22 +1609,22 @@ namespace BoilerplateCore.Core.Security
                 PasswordHash = _userManager.PasswordHasher.HashPassword(user, newPassword),
                 CreateDate = DateTime.Now
             };
-            await _securityDbContext.PreviousPasswords.AddAsync(previousPassword);
-            await _securityDbContext.SaveChangesAsync();
+            //await _securityDbContext.PreviousPasswords.AddAsync(previousPassword);
+            //await _securityDbContext.SaveChangesAsync();
         }
 
-        private async Task<AuthenticationResponse> ValidatePreviousPassword(ApplicationUser user, string newPassword)
-        {
-            var isPreviousPassword = 
-                await _securityDbContext.PreviousPasswords.Where(x => x.UserId.Equals(user.Id))
-                                                          .OrderByDescending(x => x.CreateDate)
-                                                          .Take(securityOptions.PreviousPasswordValidationLimit)
-                                                          .AnyAsync(x => _userManager.PasswordHasher.VerifyHashedPassword(user, x.PasswordHash, newPassword) != PasswordVerificationResult.Failed);
+        //private async Task<AuthenticationResponse> ValidatePreviousPassword(ApplicationUser user, string newPassword)
+        //{
+        //    var isPreviousPassword = 
+        //        await _securityDbContext.PreviousPasswords.Where(x => x.UserId.Equals(user.Id))
+        //                                                  .OrderByDescending(x => x.CreateDate)
+        //                                                  .Take(securityOptions.PreviousPasswordValidationLimit)
+        //                                                  .AnyAsync(x => _userManager.PasswordHasher.VerifyHashedPassword(user, x.PasswordHash, newPassword) != PasswordVerificationResult.Failed);
 
-            return isPreviousPassword
-                    ? new AuthenticationResponse { ResponseType = ResponseType.Error, Data = "You cannot use your previous passwords." }
-                    : new AuthenticationResponse { ResponseType = ResponseType.Success };
-        }
+        //    return isPreviousPassword
+        //            ? new AuthenticationResponse { ResponseType = ResponseType.Error, Data = "You cannot use your previous passwords." }
+        //            : new AuthenticationResponse { ResponseType = ResponseType.Success };
+        //}
 
         #endregion Private Methods
     }

@@ -9,7 +9,7 @@ namespace BoilerplateCore.Data.Repository
 {
     public class AddressRepository : BaseRepository<Addresses, int>, IAddressRepository
     {
-        public AddressRepository(IDbContext context) : base(context)
+        public AddressRepository(ISqlServerDbContext context) : base(context)
         {
         }
     }
