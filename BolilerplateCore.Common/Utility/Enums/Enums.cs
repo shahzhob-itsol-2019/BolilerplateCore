@@ -7,6 +7,12 @@ namespace BoilerplateCore.Common.Utility
 {
     public class Enums
     {
+        public enum ApplicationType
+        {
+            CoreApi = 1,
+            Web = 2
+        }
+
         public enum StatusTypes
         {
             UserStatus = 1,

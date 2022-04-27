@@ -19,7 +19,7 @@ using LoginResponse = BoilerplateCore.Common.Models.LoginResponse;
 namespace BoilerplateCore.CoreApi.Controllers
 {
     //[Route("api/Account")]
-    [ApiController]
+    //[ApiController]
     public class AccountController : BaseController
     {
         private readonly ISecurityService _securityService;

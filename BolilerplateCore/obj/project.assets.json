@@ -12161,7 +12161,6 @@
       "Abp.Web.Common >= 5.2.0",
       "BoilerplateCore.Common >= 1.0.0",
       "BoilerplateCore.Core >= 1.0.0",
-      "BoilerplateCore.Data >= 1.0.0",
       "BoilerplateCore.Services >= 1.0.0",
       "Microsoft.AspNetCore.HttpsPolicy >= 2.2.0",
       "Microsoft.AspNetCore.Identity >= 2.2.0",
@@ -12202,9 +12201,6 @@
             },
             "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Core\\BoilerplateCore.Core.csproj": {
               "projectPath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Core\\BoilerplateCore.Core.csproj"
-            },
-            "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Data\\BoilerplateCore.Data.csproj": {
-              "projectPath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Data\\BoilerplateCore.Data.csproj"
             },
             "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Services\\BoilerplateCore.Services.csproj": {
               "projectPath": "C:\\Users\\Shahzhob OSL\\source\\repos\\BolilerplateCore\\BolilerplateCore.Services\\BoilerplateCore.Services.csproj"

@@ -12,10 +12,8 @@ namespace BoilerplateCore.Services.ServicesDependencyResolutions
 {
     public static class ServiceModule
     {
-        public static void Configure(this IServiceCollection services, IConfiguration configuration)
+        public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddScoped<IUserService, UserService>();
-            //services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<ICityService, CityService>();

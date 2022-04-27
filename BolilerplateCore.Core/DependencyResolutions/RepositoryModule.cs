@@ -16,7 +16,7 @@ namespace BoilerplateCore.Core.DependencyResolutions
 {
     public static class RepositoryModule
     {
-        public static void Configure(IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureDbContext(IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<SqlServerDbContext>(
                 options => options.UseSqlServer(
@@ -25,31 +25,8 @@ namespace BoilerplateCore.Core.DependencyResolutions
             var componentOptions = services.BuildServiceProvider().GetService<Microsoft.Extensions.Options.IOptionsSnapshot<ComponentOptions>>();
             if (componentOptions.Value.Security.SecurityService == "AspnetIdentity")
             {
-                services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-                {
-                    options.User.RequireUniqueEmail = false;
-                })
-                .AddEntityFrameworkStores<SqlServerDbContext>()
-                .AddDefaultTokenProviders();
-
-                // AddCors must be before AddMvc
-                services.AddCors(options =>
-                {
-                    options.AddPolicy(
-                        "CorsPolicy",
-                        builder =>
-                        {
-                            builder.AllowAnyOrigin()
-                                .AllowAnyMethod()
-                                .AllowAnyHeader()
-                                .WithExposedHeaders("x-pagination");
-                        });
-                });
-                services.AddControllers();
-                services.AddHealthChecks();
-
-                services.BuildServiceProvider().GetService<UserManager<ApplicationUser>>();
-                services.AddTransient<ISqlServerDbContext, SqlServerDbContext>();
+               services.BuildServiceProvider().GetService<UserManager<ApplicationUser>>();
+                //services.AddTransient<ISqlServerDbContext, SqlServerDbContext>();
             }
 
             services.AddScoped<ISqlServerDbContext, SqlServerDbContext>();

@@ -12,7 +12,7 @@ namespace BoilerplateCore.Core.DependencyResolutions
     {
         private static IOptionsSnapshot<InfrastructureOptions> infrastructureOptions = null;
 
-        public static void RegisterServices(IServiceCollection services)
+        public static void AddSwagger(IServiceCollection services)
         {
             infrastructureOptions = services.BuildServiceProvider().GetService<IOptionsSnapshot<InfrastructureOptions>>();
             switch (infrastructureOptions.Value.Documentation)

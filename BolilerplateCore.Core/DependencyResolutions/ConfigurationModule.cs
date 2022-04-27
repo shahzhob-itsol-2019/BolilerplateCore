@@ -8,13 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static BoilerplateCore.Common.Utility.Enums;
 
 namespace BoilerplateCore.Core.DependencyResolutions
 {
     public static class ConfigurationModule
     {
 
-        public static IServiceCollection Configure(IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection Configure(IServiceCollection services, IConfiguration configuration, ApplicationType applicationType)
         {
             services.Configure<BoilerplateOptions>(configuration.GetSection("BoilerplateOptions"));
             services.Configure<ComponentOptions>(configuration.GetSection("Component"));
