@@ -1,13 +1,21 @@
+using BoilerplateCore.Core.DependencyResolutions;
+using BoilerplateCore.RestApi.Models;
+using BoilerplateCore.Services.ServicesDependencyResolutions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using BoilerplateCore.CoreApi.Models;
-using BoilerplateCore.Services.ServicesDependencyResolutions;
-using BoilerplateCore.Core.DependencyResolutions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using static BoilerplateCore.Common.Utility.Enums;
 
-namespace BoilerplateCore.CoreApi
+namespace BoilerplateCore.RestApi
 {
     public class Startup
     {

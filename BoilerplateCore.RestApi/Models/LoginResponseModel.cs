@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static BoilerplateCore.Common.Utility.Enums;
 
-namespace BoilerplateCore.CoreApi.Models
+namespace BoilerplateCore.RestApi.Models
 {
     public class LoginResponseModel
     {

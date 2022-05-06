@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Security.Claims;
 
-namespace BoilerplateCore.CoreApi.Models
+namespace BoilerplateCore.RestApi.Models
 {
     public class CurrentUser
     {

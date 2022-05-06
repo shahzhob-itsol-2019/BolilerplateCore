@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BoilerplateCore.CoreApi
+namespace BoilerplateCore.RestApi
 {
     public class Program
     {

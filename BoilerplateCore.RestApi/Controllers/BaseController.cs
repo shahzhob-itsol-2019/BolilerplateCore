@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using IdentityModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BoilerplateCore.CoreApi.Controllers
+namespace BoilerplateCore.RestApi.Controllers
 {
     public class BaseController : Controller
     {

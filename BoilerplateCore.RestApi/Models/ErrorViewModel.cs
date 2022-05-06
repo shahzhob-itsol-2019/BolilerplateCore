@@ -1,6 +1,6 @@
 using System;
 
-namespace BoilerplateCore.CoreApi.Models
+namespace BoilerplateCore.RestApi.Models
 {
     public class ErrorViewModel
     {

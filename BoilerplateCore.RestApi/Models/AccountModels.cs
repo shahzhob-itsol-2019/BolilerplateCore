@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BoilerplateCore.CoreApi.Models
+namespace BoilerplateCore.RestApi.Models
 {
     public class ExternalAuthenticationProvider
     {

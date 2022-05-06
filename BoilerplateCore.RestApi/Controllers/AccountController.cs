@@ -3,8 +3,7 @@ using BoilerplateCore.Common.Helpers;
 using BoilerplateCore.Common.Models;
 using BoilerplateCore.Common.Options;
 using BoilerplateCore.Core.ISecurity;
-using BoilerplateCore.CoreApi.Models;
-using BoilerplateCore.Services.IService;
+using BoilerplateCore.RestApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,7 @@ using System.Threading.Tasks;
 using static BoilerplateCore.Common.Utility.Enums;
 using LoginResponse = BoilerplateCore.Common.Models.LoginResponse;
 
-namespace BoilerplateCore.CoreApi.Controllers
+namespace BoilerplateCore.RestApi.Controllers
 {
     //[Route("api/Account")]
     //[ApiController]

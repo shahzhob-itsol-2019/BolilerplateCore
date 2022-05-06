@@ -1,6 +1,6 @@
 ﻿using BoilerplateCore.Common.Extensions;
 using BoilerplateCore.Common.Helpers;
-using BoilerplateCore.CoreApi.Models;
+using BoilerplateCore.RestApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using static BoilerplateCore.Common.Utility.Enums;
 
-namespace BoilerplateCore.CoreApi.Helpers
+namespace BoilerplateCore.RestApi.Helpers
 {
     public class HttpClientHelper
     {
