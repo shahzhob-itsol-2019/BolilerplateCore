@@ -2,8 +2,10 @@
 using BoilerplateCore.Common.Filters;
 using BoilerplateCore.Common.Helpers;
 using BoilerplateCore.Common.Helpers.Interfaces;
+using BoilerplateCore.Core.Authorization;
 using BoilerplateCore.Core.Communication;
 using BoilerplateCore.Data.Mapping;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +29,7 @@ namespace BoilerplateCore.Core.DependencyResolutions
             services.AddScoped<ValidateModelState>();
 
             services.AddSingleton(mapper);
+            services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpContextAccessor();

@@ -23,20 +23,17 @@ namespace BoilerplateCore.CoreApi.Controllers
     public class AccountController : BaseController
     {
         private readonly ISecurityService _securityService;
-        //private readonly IUserService _userService;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly SecurityOptions securityOptions;
         private readonly CurrentUser currentUser;
         public AccountController(
                 ISecurityService securityService,
-                //IUserService userService,
                 IHttpContextAccessor httpContextAccessor,
                 IOptionsSnapshot<SecurityOptions> securityOptions,
                 CurrentUser currentUser
             )
         {
             _securityService = securityService;
-            //_userService = userService;
             this.httpContextAccessor = httpContextAccessor;
             this.securityOptions = securityOptions.Value;
             this.currentUser = currentUser;
@@ -45,19 +42,12 @@ namespace BoilerplateCore.CoreApi.Controllers
 
         #region public actions
 
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult test()
-        {
-            return null;
-        }
-
         //
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
-        //[ActionName("Register")]
-        //[Route("Register")]
+        [ActionName("Register")]
+        [Route("Account/Register")]
         [ServiceFilter(typeof(ValidateModelState))]
         [Produces("application/json", Type = typeof(BaseModel))]
         public async Task<IActionResult> Register(RegisterUserModel model)
@@ -84,6 +74,31 @@ namespace BoilerplateCore.CoreApi.Controllers
         }
 
         //
+        // POST: /Account/Login
+        [HttpPost]
+        [AllowAnonymous]
+        [ActionName("Login")]
+        [Route("Account/Login")]
+        [ServiceFilter(typeof(ValidateModelState))]
+        [Produces("application/json", Type = typeof(LoginResponse))]
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            try
+            {
+                var result = await _securityService.Login(model.Email, model.Password, model.RememberMe);
+
+                if (result.Status == LoginStatus.Failed)
+                    return new OkObjectResult(new LoginResponse { Status = LoginStatus.Failed, Data = null, Message = result.Message });
+                var userId = GetUserId();
+                return new OkObjectResult(new LoginResponse { Status = result.Status, Data = result.Data, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new LoginResponse { Message = "There was an error processing your request, please try again." });
+            }
+        }
+
+        //
         // POST: /Account/RegisterExternal
         [HttpPost]
         [AllowAnonymous]
@@ -96,6 +111,32 @@ namespace BoilerplateCore.CoreApi.Controllers
             try
             {
                 var result = await _securityService.CreateExternalUser(model);
+
+                if (result.Status == LoginStatus.Failed)
+                    return new OkObjectResult(new LoginResponse { Status = LoginStatus.Failed, Data = null, Message = result.Message });
+
+                return new OkObjectResult(new LoginResponse { Status = result.Status, Data = result.Data, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new LoginResponse { Message = "There was an error processing your request, please try again." });
+            }
+        }
+
+        //
+        // POST: /Account/ExternalLogin
+        [HttpPost]
+        //[AllowAnonymous]
+        //[Authorize(Policy = "Claim.DoB")]
+        [ActionName("ExternalLogin")]
+        [Route("Account/ExternalLogin")]
+        [ServiceFilter(typeof(ValidateModelState))]
+        [Produces("application/json", Type = typeof(LoginResponse))]
+        public async Task<IActionResult> ExternalLogin(ExternalLoginModel model)
+        {
+            try
+            {
+                var result = await _securityService.ExternalLogin(model.LoginProvider, model.ProviderKey, model.IsPersistent, model.BypassTwoFactor);
 
                 if (result.Status == LoginStatus.Failed)
                     return new OkObjectResult(new LoginResponse { Status = LoginStatus.Failed, Data = null, Message = result.Message });
@@ -132,57 +173,7 @@ namespace BoilerplateCore.CoreApi.Controllers
             }
         }
 
-        //
-        // POST: /Account/Login
-        [HttpPost]
-        [AllowAnonymous]
-        [ActionName("Login")]
-        [Route("Account/Login")]
-        [ServiceFilter(typeof(ValidateModelState))]
-        [Produces("application/json", Type = typeof(LoginResponse))]
-        public async Task<IActionResult> Login(LoginModel model)
-        {
-            try
-            {
-                var result = await _securityService.Login(model.Email, model.Password, model.RememberMe);
-
-                if (result.Status == LoginStatus.Failed)
-                    return new OkObjectResult(new LoginResponse { Status = LoginStatus.Failed, Data = null, Message = result.Message });
-                var userId = GetUserId();
-                return new OkObjectResult(new LoginResponse { Status = result.Status, Data = result.Data, Message = result.Message });
-            }
-            catch (Exception ex)
-            {
-                return new BadRequestObjectResult(new LoginResponse { Message = "There was an error processing your request, please try again." });
-            }
-        }
-
-        //
-        // POST: /Account/ExternalLogin
-        [HttpPost]
-        [AllowAnonymous]
-        [ActionName("ExternalLogin")]
-        [Route("Account/ExternalLogin")]
-        [ServiceFilter(typeof(ValidateModelState))]
-        [Produces("application/json", Type = typeof(LoginResponse))]
-        public async Task<IActionResult> ExternalLogin(ExternalLoginModel model)
-        {
-            try
-            {
-                var result = await _securityService.ExternalLogin(model.LoginProvider, model.ProviderKey, model.IsPersistent, model.BypassTwoFactor);
-
-                if (result.Status == LoginStatus.Failed)
-                    return new OkObjectResult(new LoginResponse { Status = LoginStatus.Failed, Data = null, Message = result.Message });
-
-                return new OkObjectResult(new LoginResponse { Status = result.Status, Data = result.Data, Message = result.Message });
-            }
-            catch (Exception ex)
-            {
-                return new BadRequestObjectResult(new LoginResponse { Message = "There was an error processing your request, please try again." });
-            }
-        }
-
-        //
+         //
         // POST: /Account/TwoFactorLogin
         [HttpPost]
         [AllowAnonymous]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static BoilerplateCore.Common.Utility.Enums;
 
 namespace BoilerplateCore.Common.Models
 {
@@ -51,6 +52,7 @@ namespace BoilerplateCore.Common.Models
 
     public class LoginResponseModel
     {
+        public LoginStatus Status { get; set; }
         public bool Success { get; set; }
         public System.Security.Claims.ClaimsPrincipal Data { get; set; }
         public string Message { get; set; }

@@ -1,14 +1,19 @@
 ﻿using BoilerplateCore.Common.Encryption;
 using BoilerplateCore.Common.Options;
+using BoilerplateCore.Core.Authorization;
 using BoilerplateCore.Core.ISecurity;
 using BoilerplateCore.Data.Database;
 using BoilerplateCore.Data.Entities;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -20,7 +25,7 @@ namespace BoilerplateCore.Core.Security
 {
     public static class Securities
     {
-        public static void RegisterServices(IServiceCollection services, ApplicationType applicationType)
+        public static void RegisterServices(IServiceCollection services, IConfiguration configuration, ApplicationType applicationType)
         {
             var componentOptions = services.BuildServiceProvider().GetService<IOptionsSnapshot<ComponentOptions>>();
             var securityOptions = services.BuildServiceProvider().GetService<IOptionsSnapshot<SecurityOptions>>();
@@ -49,42 +54,25 @@ namespace BoilerplateCore.Core.Security
 
             AddIdentity(services, applicationType);
             AddAuthentication(services, applicationType);
+            AddAuthorization(services, configuration, applicationType);
 
             if (securityOptions.Value.MicrosoftAuthenticationAdded)
-                //AddMicrosoftAuthentication(services);
+                AddMicrosoftAuthentication(services);
 
-                if (securityOptions.Value.GoogleAuthenticationAdded)
-                    //AddGoogleAuthentication(services);
+            if (securityOptions.Value.GoogleAuthenticationAdded)
+                AddGoogleAuthentication(services);
 
-                    if (securityOptions.Value.TwitterAuthenticationAdded)
+            if (securityOptions.Value.TwitterAuthenticationAdded)
                         AddTwitterAuthentication(services);
 
             if (securityOptions.Value.FacebookAuthenticationAdded)
                 AddFacebookAuthentication(services);
         }
-        private static void AddIdentity(IServiceCollection services, ApplicationType applicationType)
-        {
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            {
-                options.User.RequireUniqueEmail = false;
-            })
-            .AddEntityFrameworkStores<SqlServerDbContext>()
-            .AddDefaultTokenProviders();
-
-            services.ConfigureApplicationCookie(config =>
-            {
-                config.Cookie.Name = "Identity.Cookie";
-                config.LoginPath = "/Home/Login";
-            });
-        }
-        private static void AddAuthorization(IServiceCollection services, ApplicationType applicationType)
-        {
-        }
         private static void AddAuthentication(IServiceCollection services, ApplicationType applicationType)
         {
+            var boilerplateOptions = services.BuildServiceProvider().GetService<IOptionsSnapshot<BoilerplateOptions>>();
             if (applicationType == ApplicationType.CoreApi)
             {
-                var boilerplateOptions = services.BuildServiceProvider().GetService<IOptionsSnapshot<BoilerplateOptions>>();
 
                 var key = Encoding.ASCII.GetBytes("Core.Secret@Boilerplate");
                 services.AddAuthentication(options =>
@@ -96,18 +84,29 @@ namespace BoilerplateCore.Core.Security
                 {
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
-                    //ValidateIssuer = false,
-                    //ValidateAudience = false,
-                    ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        //ValidateIssuer = false,
+                        //ValidateAudience = false,
+                        //ValidateIssuer = true,
+                        //ValidateAudience = true,
+                        //ValidateLifetime = true,
                         ValidIssuer = boilerplateOptions.Value.ApiUrl,
                         ValidAudience = boilerplateOptions.Value.ApiUrl,
                     };
+                    //options.Events = new JwtBearerEvents()
+                    //{
+                    //    OnMessageReceived = context =>
+                    //    {
+                    //        if (context.Request.Query.ContainsKey("Bearer"))
+                    //        {
+                    //            context.Token = context.Request.Query["Bearer"];
+                    //        }
+                    //        return Task.CompletedTask;
+                    //    }
+                    //};
                 });
 
                 /// Todo:
@@ -155,68 +154,59 @@ namespace BoilerplateCore.Core.Security
                 //    options.AddPolicy("TrainedStaffOnly",
                 //        policy => policy.RequireClaim("CompletedBasicTraining"));
                 //}); 
-            } else if (applicationType == ApplicationType.Web)
-            {
-                services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-                })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                {
-                    options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-                    options.LoginPath = new PathString("/Account/Login");
-                    options.AccessDeniedPath = new PathString("/Account/Login/");
-                    options.Events = new CookieAuthenticationEvents()
-                    {
-                        OnValidatePrincipal = ctx =>
-                        {
-                            var ret = Task.Run(async () =>
-                            {
-                                var accessToken = ctx.Principal.FindFirst(ClaimTypes.PrimarySid)?.Value;
-                                var userName = ctx.Principal.FindFirst(ClaimTypes.Name)?.Value;
-                                //var result = (await HttpClientHelper.GetAsync<UserClaim>("Account/GetUser?userName=" + userName));
-                                //if (result == null || result.Data == null)
-                                //{
-                                //    ctx.RejectPrincipal();
-                                //}
-                            });
-                            return ret;
-                        },
-                        OnSigningIn = async (context) =>
-                        {
-                            ClaimsIdentity identity = (ClaimsIdentity)context.Principal.Identity;
-                            identity.AddClaim(new Claim(ClaimTypes.PrimarySid, ""));
-                            identity.AddClaim(new Claim(ClaimTypes.Sid, ""));
-                            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, ""));
-                            identity.AddClaim(new Claim(ClaimTypes.Name, ""));
-                            identity.AddClaim(new Claim(ClaimTypes.Email, ""));
-                            identity.AddClaim(new Claim(ClaimTypes.GivenName, ""));
-                            identity.AddClaim(new Claim(ClaimTypes.Surname, ""));
-                            identity.AddClaim(new Claim(ClaimTypes.Role, ""));
-                        }
-                    };
-                })
-                .AddCookie(IdentityConstants.ExternalScheme, options =>
-                {
-                    options.Cookie.Name = IdentityConstants.ExternalScheme;
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-                    options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login/");
-                });
-                //.AddMicrosoftAccount(microsoftOptions =>
-                //{
-                //    microsoftOptions.ClientId = "68669dee-ad51-4ab0-8a8f-16f456a05917";
-                //    microsoftOptions.ClientSecret = "xwaxyXEPRO726#@}icBG05@";
-                //})
-                //.AddGoogle(googleOptions =>
-                //{
-                //    googleOptions.ClientId = "434467402013-4ehq09dvqp7qu57jucr1rra56fs0glcv.apps.googleusercontent.com";
-                //    googleOptions.ClientSecret = "k4kvo8ckstA6u1Da5Skkiqaj";
-                //});
             }
+            else if (applicationType == ApplicationType.Web)
+            {
+                
+            }
+        }
+
+        private static void AddAuthorization(IServiceCollection services, IConfiguration configuration, ApplicationType applicationType)
+        {
+            services.AddAuthorization(config =>
+            {
+                //work under the hood
+                //var defaultAuthBuilder = new AuthorizationPolicyBuilder();
+                //var defaultAuthPolicy = defaultAuthBuilder
+                //    .RequireAuthenticatedUser()
+                //    .RequireClaim(ClaimTypes.DateOfBirth)
+                //    .Build();
+                //config.DefaultPolicy = defaultAuthPolicy;
+
+                // working same as above
+                //config.AddPolicy("Claim.DoB", policyBuilder =>
+                //{
+                //    policyBuilder.RequireClaim(ClaimTypes.DateOfBirth);
+                //});
+
+                // config.AddPolicy("Admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
+
+
+                config.AddPolicy("Claim.DoB", policyBuilder =>
+                {
+                    ////policyBuilder.AddRequirements(new CustomRequireClaim(ClaimTypes.DateOfBirth));
+                    
+                    ///same as above using extension method
+                    policyBuilder.RequireCustomClaim(JwtClaimTypes.BirthDate);
+                });
+            });
+                
+        }
+
+        private static void AddIdentity(IServiceCollection services, ApplicationType applicationType)
+        {
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+            })
+            .AddEntityFrameworkStores<SqlServerDbContext>()
+            .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "Identity.Cookie";
+                config.LoginPath = "/Home/Login";
+            });
         }
 
         private static void AddMicrosoftAuthentication(IServiceCollection services)
@@ -256,6 +246,18 @@ namespace BoilerplateCore.Core.Security
             {
                 facebookAuthOptions.ClientId = facebookkOptions.Value.AppId;
                 facebookAuthOptions.ClientSecret = facebookkOptions.Value.AppSecret;
+            });
+        }
+
+        private static void AddExternalSchemeAuthentication(IServiceCollection services)
+        {
+            var outlookOptions = services.BuildServiceProvider().GetService<IOptionsSnapshot<OutlookOptions>>();
+            services.AddAuthentication().AddCookie(IdentityConstants.ExternalScheme, options =>
+            {
+                options.Cookie.Name = IdentityConstants.ExternalScheme;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+                options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login/");
             });
         }
     }

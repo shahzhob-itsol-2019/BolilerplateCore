@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -263,6 +264,7 @@ namespace BoilerplateCore.Core.Security
                 new Claim(JwtClaimTypes.Id, user.Id),
                 new Claim(JwtClaimTypes.Name, user.UserName),
                 new Claim(JwtClaimTypes.Email, user.Email),
+                new Claim(JwtClaimTypes.BirthDate, "2022-11-11"),
             });
 
             if (!string.IsNullOrWhiteSpace(user.FirstName))
@@ -277,13 +279,13 @@ namespace BoilerplateCore.Core.Security
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Core.Secret@Boilerplate"));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
+            var token = new JwtSecurityToken(
                             issuer: apiUrl,
                             audience: apiUrl,
                             claims: claims,
                             expires: DateTime.Now.AddDays(1),
                             signingCredentials: credentials);
-            var accessToken = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
+            var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
             return accessToken;
         }
 

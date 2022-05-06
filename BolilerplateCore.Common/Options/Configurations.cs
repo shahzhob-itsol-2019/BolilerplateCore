@@ -13,6 +13,14 @@ namespace BoilerplateCore.Common.Options
         public string WebUrl { get; set; }
     }
 
+    public class Boilerplate
+    {
+        public Boilerplate()
+        {
+        }
+        public string WebApiUrl { get; set; }
+    }
+
     #region ComponentOptions
     public class ComponentOptions
     {

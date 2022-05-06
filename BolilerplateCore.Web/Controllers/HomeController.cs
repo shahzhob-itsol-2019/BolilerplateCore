@@ -1,4 +1,5 @@
 ﻿using BoilerplateCore.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,26 +10,32 @@ using System.Threading.Tasks;
 
 namespace BoilerplateCore.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
+        public HomeController(Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
         {
-            _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
         }
-
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
+            ViewData["Message"] = "Your application description page.";
+
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "Your contact page.";
+
+            return View();
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

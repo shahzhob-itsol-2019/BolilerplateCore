@@ -1,7 +1,7 @@
 ﻿using BoilerplateCore.Common.Extensions;
-using BoilerplateCore.Common.Helpers.Interfaces;
-using BoilerplateCore.Common.Models;
-using Microsoft.AspNetCore.Http;
+using BoilerplateCore.Common.Helpers;
+using BoilerplateCore.Common.Utility;
+using BoilerplateCore.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,33 +9,27 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace BoilerplateCore.Common.Helpers
+namespace BoilerplateCore.Web.Helpers
 {
-    public class HttpClientHelper : IHttpClient
+    public class HttpClientHelper
     {
-        private HttpClient httpClient;
-        private IHttpContextAccessor accessor;
-        private readonly string WebApiUrl = string.Empty;
-        public HttpClientHelper
-            (
-                IHttpContextAccessor httpContext
-            //, string baseUri
-            )
+        private static HttpClient httpClient;
+        private static readonly string WebApiUrl = string.Empty;
+        static HttpClientHelper()
         {
-            //_baseUri = baseUri;
-            this.accessor = httpContext;
+            WebApiUrl = Startup.StaticConfiguration.GetSection("Boilerplate:WebApiUrl").Value;
             httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(WebApiUrl);
             httpClient.DefaultRequestHeaders.Accept.Clear();
-            //httpClient.BaseAddress = new Uri(_baseUri);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task SetBearerToken(string token)
+        public static void SetBearerToken(string token)
         {
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
-        public async Task<LoginResponseModel> TokenAsync(string action, object data)
+        public static async Task<LoginResponseModel> TokenAsync(string action, object data)
         {
             try
             {
@@ -45,7 +39,7 @@ namespace BoilerplateCore.Common.Helpers
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var keyValuePair = data?.ToKeyValue();
                 HttpResponseMessage response = await httpClient.PostAsync(action, keyValuePair == null ? null : new FormUrlEncodedContent(keyValuePair));
-
+                
                 //Process the response.
                 if (response.IsSuccessStatusCode)
                 {
@@ -59,6 +53,8 @@ namespace BoilerplateCore.Common.Helpers
                 else
                 {
                     var responseModel = await JsonSerializer.DeserializeAsync<LoginResponseModel>(await response.Content.ReadAsStringAsync());
+                    if (responseModel == null)
+                        return new LoginResponseModel { Status = Enums.LoginStatus.Failed, Message = "Something went wrong. Please try again latter." };
                     return new LoginResponseModel { Status = responseModel.Status, Message = responseModel.Message };
                 }
             }
@@ -68,7 +64,7 @@ namespace BoilerplateCore.Common.Helpers
             }
         }
 
-        public async Task<BaseModel<T>> GetAsync<T>(string action)
+        public static async Task<ResponseModel<T>> GetAsync<T>(string action)
         {
             try
             {
@@ -76,8 +72,8 @@ namespace BoilerplateCore.Common.Helpers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                 {
@@ -85,17 +81,19 @@ namespace BoilerplateCore.Common.Helpers
                 }
                 else
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    if (responseModel == null)
+                        return new ResponseModel<T> { Success = false, Message = "Something went wrong. Please try again latter." };
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
                 }
             }
             catch (Exception ex)
             {
-                return new BaseModel<T> { Success = false, Message = ex.Message };
+                return new ResponseModel<T> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<BaseModel<T>> PostAsync<T>(string action)
+        public static async Task<ResponseModel<T>> PostAsync<T>(string action)
         {
             try
             {
@@ -103,8 +101,8 @@ namespace BoilerplateCore.Common.Helpers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                 {
@@ -112,17 +110,19 @@ namespace BoilerplateCore.Common.Helpers
                 }
                 else
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    if (responseModel == null)
+                        return new ResponseModel<T> { Success = false, Message = "Something went wrong. Please try again latter." };
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
                 }
             }
             catch (Exception ex)
             {
-                return new BaseModel<T> { Success = false, Message = ex.Message };
+                return new ResponseModel<T> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<BaseModel<T>> PostAsync<T>(string action, object data)
+        public static async Task<ResponseModel<T>> PostAsync<T>(string action, object data)
         {
             try
             {
@@ -132,12 +132,12 @@ namespace BoilerplateCore.Common.Helpers
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var keyValuePair = data?.ToKeyValue();
                 HttpResponseMessage response = await httpClient.PostAsync(action, keyValuePair == null ? null : new FormUrlEncodedContent(keyValuePair));
-
+                
                 //Process the response.
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                 {
@@ -145,16 +145,20 @@ namespace BoilerplateCore.Common.Helpers
                 }
                 else
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    if(responseModel == null)
+                        return new ResponseModel<T> { Success = false, Message = "Something went wrong. Please try again latter." };
+
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
                 }
             }
             catch (HttpRequestException ex)
             {
-                return new BaseModel<T> { Success = false, Message = ex.Message };
+                return new ResponseModel<T> { Success = false, Message = ex.Message };
             }
         }
-        public async Task<BaseModel<T>> PutAsync<T>(string action, object data)
+
+        public static async Task<ResponseModel<T>> PutAsync<T>(string action, object data)
         {
             try
             {
@@ -168,8 +172,8 @@ namespace BoilerplateCore.Common.Helpers
                 //Process the response.
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                 {
@@ -177,17 +181,19 @@ namespace BoilerplateCore.Common.Helpers
                 }
                 else
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    if (responseModel == null)
+                        return new ResponseModel<T> { Success = false, Message = "Something went wrong. Please try again latter." };
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
                 }
             }
             catch (HttpRequestException ex)
             {
-                return new BaseModel<T> { Success = false, Message = ex.Message };
+                return new ResponseModel<T> { Success = false, Message = ex.Message };
             }
         }
 
-        public async Task<BaseModel<T>> DeleteAsync<T>(string action)
+        public static async Task<ResponseModel<T>> DeleteAsync<T>(string action)
         {
             try
             {
@@ -195,8 +201,8 @@ namespace BoilerplateCore.Common.Helpers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message, Data = responseModel.Data };
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                 {
@@ -204,13 +210,15 @@ namespace BoilerplateCore.Common.Helpers
                 }
                 else
                 {
-                    var responseModel = await JsonSerializer.DeserializeAsync<BaseModel<T>>(await response.Content.ReadAsStringAsync());
-                    return new BaseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
+                    var responseModel = await JsonSerializer.DeserializeAsync<ResponseModel<T>>(await response.Content.ReadAsStringAsync());
+                    if (responseModel == null)
+                        return new ResponseModel<T> { Success = false, Message = "Something went wrong. Please try again latter." };
+                    return new ResponseModel<T> { Success = responseModel.Success, Message = responseModel.Message };
                 }
             }
             catch (HttpRequestException ex)
             {
-                return new BaseModel<T> { Success = false, Message = ex.Message };
+                return new ResponseModel<T> { Success = false, Message = ex.Message };
             }
         }
 

@@ -1,0 +1,21 @@
+﻿@using BoilerplateCore.Web.Views.Account
+@using BoilerplateCore.Web.Helpers
+
+@{
+    var userName = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
+    var authenticationresponse = await HttpClientHelper.GetAsync<UserAuthenticationInfo>("account/getauthenticationdetail?username=" + userName);
+    var haspassword = authenticationresponse == null 
+                            ? false
+                            : authenticationresponse.Data == null
+                                ? false
+                                : authenticationresponse.Data.HasPassword;
+    var functionName = haspassword ? "ChangePassword" : "SetPassword";
+}
+
+<ul class="nav nav-pills nav-stacked">
+    <li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-action="UserProfile">Profile</a></li>
+    <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)"><a asp-action=@functionName>Password</a></li>
+    <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-action="ManageLogins">External logins</a></li>
+    <li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a asp-action="TwoFactorAuthentication">Two-factor authentication</a></li>
+</ul>
+

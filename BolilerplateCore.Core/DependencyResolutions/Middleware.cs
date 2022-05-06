@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace BoilerplateCore.Core.DependencyResolutions
 {
@@ -35,7 +37,17 @@ namespace BoilerplateCore.Core.DependencyResolutions
             services.AddHealthChecks();
             if (applicationType == ApplicationType.Web)
             {
-                services.AddControllersWithViews(); 
+                services.AddControllersWithViews(config =>
+                {
+                    var defaultAuthBuilder = new AuthorizationPolicyBuilder();
+                    var defaultAuthPolicy = defaultAuthBuilder
+                        .RequireAuthenticatedUser()
+                        .Build();
+
+                    // global authorization filter which is applied on whole application if you want to bypass it on some endpoint use [AllowAnonymous]
+                    //config.Filters.Add(new AuthorizeFilter(defaultAuthPolicy));
+                });
+                services.AddRazorPages();
             }
 
         }
@@ -91,9 +103,8 @@ namespace BoilerplateCore.Core.DependencyResolutions
 
                 app.UseEndpoints(endpoints =>
                 {
-                    endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller=Home}/{action=Index}/{id?}");
+                    endpoints.MapDefaultControllerRoute();
+                    endpoints.MapRazorPages();
                 });
             }
         }
