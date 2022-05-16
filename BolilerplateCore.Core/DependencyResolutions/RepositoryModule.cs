@@ -26,7 +26,7 @@ namespace BoilerplateCore.Core.DependencyResolutions
             if (componentOptions.Value.Security.SecurityService == "AspnetIdentity")
             {
                services.BuildServiceProvider().GetService<UserManager<ApplicationUser>>();
-                //services.AddTransient<ISqlServerDbContext, SqlServerDbContext>();
+                services.AddTransient<ISqlServerDbContext, SqlServerDbContext>();
             }
 
             services.AddScoped<ISqlServerDbContext, SqlServerDbContext>();
